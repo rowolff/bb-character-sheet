@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { createGlobalStyle } from 'styled-components'
+import styled, { createGlobalStyle } from 'styled-components'
 
 import { AttributeValues } from './types/Attributes'
 import { AttributeBox } from './components/AttributeBox'
 import { Selector } from './components/Selector'
+import { StatOverview } from './components/StatOverview'
 import { attributeItems } from './constants/attributeItems'
 import { archetypes } from './constants/archetypes'
 import { classes } from './constants/classes'
@@ -15,6 +16,11 @@ const GlobalStyle = createGlobalStyle`
     color: white;
     font-family: "Segoe UI",Helvetica,Arial,sans-serif;
   }
+`
+
+const Group = styled.div`
+  display: flex;
+  align-items: center;
 `
 
 const initialStats = {
@@ -38,7 +44,6 @@ const App = () => {
   const [classStats, setClassStats] = useState<AttributeValues>(
     initialStats.stats
   )
-
   const [userStats, setUserStats] = useState<AttributeValues>(
     initialStats.stats
   )
@@ -98,8 +103,24 @@ const App = () => {
         values={character.stats}
         onUpdate={updateUserStat}
       />
-      <Selector name="Archetype" onChange={updateArchetype} data={archetypes} />
-      <Selector name="Class" onChange={updateClass} data={classes} />
+
+      <Group>
+        <h4>User Stats</h4>
+        <StatOverview group="User" stats={userStats} />
+      </Group>
+      <Group>
+        <Selector
+          name="Archetype"
+          onChange={updateArchetype}
+          data={archetypes}
+        />
+        <StatOverview group="Archetype" stats={archetypeStats} />
+      </Group>
+
+      <Group>
+        <Selector name="Class" onChange={updateClass} data={classes} />
+        <StatOverview group="Class" stats={classStats} />
+      </Group>
     </React.Fragment>
   )
 }
