@@ -9,11 +9,9 @@ interface Props {
 
 const Wrapper = styled.div`
   border: 1px solid white;
-  width: 150px;
+  width: 20%;
   margin: 5px;
   padding: 5px;
-  display: flex;
-  flex-direction: column;
 `
 
 export const Attribute: FC<Props> = ({ name, shortHand, value }) => {

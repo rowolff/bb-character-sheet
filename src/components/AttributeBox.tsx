@@ -10,10 +10,9 @@ interface Props {
 
 const Wrapper = styled.div`
   border: 1px solid grey;
-  margin: 5px;
-  padding: 5px;
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
 `
 
 export const AttributeBox: FC<Props> = ({ labels, values }) => {
