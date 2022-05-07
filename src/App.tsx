@@ -1,7 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { createGlobalStyle } from 'styled-components'
+
+import { AttributeValues } from './types/Attributes'
 import { AttributeBox } from './components/AttributeBox'
 import { attributeItems } from './constants/attributeItems'
+import { archetypes } from './constants/archetypes'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -12,7 +15,7 @@ const GlobalStyle = createGlobalStyle`
   }
 `
 
-const stats = {
+const initialStats = {
   accuracy: 0,
   damage: 1,
   speed: 2,
@@ -20,10 +23,22 @@ const stats = {
 }
 
 const App = () => {
+  const [stats, setStats] = useState<AttributeValues>(initialStats)
+
+  const updateArchetype = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    console.log(e.currentTarget.value)
+    setStats(archetypes[e.currentTarget.value])
+  }
+
   return (
     <React.Fragment>
       <GlobalStyle />
       <AttributeBox labels={attributeItems} values={stats} />
+      <select onChange={updateArchetype}>
+        {Object.keys(archetypes).map((archetype) => (
+          <option value={archetype}>{archetypes[archetype].name}</option>
+        ))}
+      </select>
     </React.Fragment>
   )
 }
