@@ -7,7 +7,7 @@ import { Selector } from './components/Selector'
 import { StatOverview } from './components/StatOverview'
 import { attributeItems } from './constants/attributeItems'
 import { archetypes } from './constants/archetypes'
-import { CharacterClass, classes, ClassValues } from './constants/classes'
+import { classes } from './constants/classes'
 
 const GlobalStyle = createGlobalStyle`
   body {
