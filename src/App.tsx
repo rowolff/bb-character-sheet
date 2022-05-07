@@ -7,7 +7,7 @@ import { Selector } from './components/Selector'
 import { StatOverview } from './components/StatOverview'
 import { attributeItems } from './constants/attributeItems'
 import { archetypes } from './constants/archetypes'
-import { classes } from './constants/classes'
+import { CharacterClass, classes, ClassValues } from './constants/classes'
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -24,14 +24,14 @@ const Group = styled.div`
 `
 
 const initialStats = {
-  archetype: 'no archetype',
-  class: 'no class',
+  archetype: 'none',
+  charClass: 'none',
   stats: { accuracy: 0, damage: 0, speed: 0, mastery: 0 },
 }
 
 type Character = {
   archetype: string
-  class: string
+  charClass: string
   stats: AttributeValues
 }
 
@@ -42,6 +42,9 @@ const App = () => {
     initialStats.stats
   )
   const [classStats, setClassStats] = useState<AttributeValues>(
+    initialStats.stats
+  )
+  const [backgroundStats, setBackgroundStats] = useState<AttributeValues>(
     initialStats.stats
   )
   const [userStats, setUserStats] = useState<AttributeValues>(
@@ -60,12 +63,24 @@ const App = () => {
   }
 
   const updateClass = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const charClass = classes[e.currentTarget.value]
+    const classKey = e.currentTarget.value
+    const charClass = classes[classKey]
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
-      class: charClass.name,
+      charClass: classKey,
     }))
     setClassStats(charClass)
+    setBackgroundStats(initialStats.stats)
+  }
+
+  const updateBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const charClass = classes[character.charClass]
+    const classBackgrounds = charClass.backgrounds
+    const background = classBackgrounds
+      ? classBackgrounds[e.currentTarget.value]
+      : null
+
+    if (background) setBackgroundStats(background)
   }
 
   const updateUserStat = (stat: keyof AttributeValues, direction: number) => {
@@ -85,14 +100,28 @@ const App = () => {
       ...prevCharacter,
       stats: {
         accuracy:
-          archetypeStats.accuracy + classStats.accuracy + userStats.accuracy,
-        damage: archetypeStats.damage + classStats.damage + userStats.damage,
-        speed: archetypeStats.speed + classStats.speed + userStats.speed,
+          archetypeStats.accuracy +
+          classStats.accuracy +
+          userStats.accuracy +
+          backgroundStats.accuracy,
+        damage:
+          archetypeStats.damage +
+          classStats.damage +
+          userStats.damage +
+          backgroundStats.damage,
+        speed:
+          archetypeStats.speed +
+          classStats.speed +
+          userStats.speed +
+          backgroundStats.speed,
         mastery:
-          archetypeStats.mastery + classStats.mastery + userStats.mastery,
+          archetypeStats.mastery +
+          classStats.mastery +
+          userStats.mastery +
+          backgroundStats.mastery,
       },
     }))
-  }, [archetypeStats, classStats, userStats])
+  }, [archetypeStats, classStats, userStats, backgroundStats])
 
   return (
     <React.Fragment>
@@ -120,6 +149,15 @@ const App = () => {
       <Group>
         <Selector name="Class" onChange={updateClass} data={classes} />
         <StatOverview group="Class" stats={classStats} />
+      </Group>
+
+      <Group>
+        <Selector
+          name="Background"
+          onChange={updateBackground}
+          data={classes[character.charClass].backgrounds}
+        />
+        <StatOverview group="Background" stats={backgroundStats} />
       </Group>
     </React.Fragment>
   )

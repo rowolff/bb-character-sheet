@@ -6,7 +6,7 @@ import { CharacterClass } from '../constants/classes'
 interface Props {
   name: string
   onChange(e: React.ChangeEvent<HTMLSelectElement>): void
-  data: Archetype | CharacterClass
+  data?: Archetype | CharacterClass
 }
 
 const Wrapper = styled.div`
@@ -19,15 +19,19 @@ const Wrapper = styled.div`
 `
 
 export const Selector: FC<Props> = ({ name, onChange, data }) => {
+  if (!data) return null
+
   return (
     <Wrapper>
       <h4>Select {name}</h4>
       <select onChange={onChange}>
-        {Object.keys(data).map((item) => (
-          <option key={item} value={item}>
-            {data[item].name}
-          </option>
-        ))}
+        {Object.keys(data).map((itemKey) => {
+          return (
+            <option key={itemKey} value={itemKey}>
+              {data[itemKey].name}
+            </option>
+          )
+        })}
       </select>
     </Wrapper>
   )

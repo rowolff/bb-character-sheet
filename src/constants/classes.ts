@@ -1,11 +1,58 @@
 import { AttributeValues } from '../types/Attributes'
 
-interface ClassValues extends AttributeValues {
+export interface ClassValues extends AttributeValues {
   name: string
+  backgrounds?: CharacterClass
 }
 
 export type CharacterClass = {
   [key: string]: ClassValues
+}
+
+const sirenBackgrounds = {
+  none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+  livingWeapon: {
+    name: 'Living Weapon',
+    accuracy: -1,
+    damage: 1,
+    speed: 0,
+    mastery: 0,
+  },
+  hiddenPast: {
+    name: 'Hidden Past',
+    accuracy: 0,
+    damage: 0,
+    speed: 1,
+    mastery: 0,
+  },
+  publicFigure: {
+    name: 'Public Figure',
+    accuracy: 0,
+    damage: 0,
+    speed: 0,
+    mastery: 0,
+  },
+  fistfullOfHell: {
+    name: 'Fistfull of Hell',
+    accuracy: 0,
+    damage: 0,
+    speed: 0,
+    mastery: 0,
+  },
+  socialAnxiety: {
+    name: 'Social Anxiety',
+    accuracy: 1,
+    damage: 0,
+    speed: 0,
+    mastery: 0,
+  },
+  gunwitch: {
+    name: 'Gunwitch',
+    accuracy: 0,
+    damage: 0,
+    speed: 0,
+    mastery: 1,
+  },
 }
 
 export const classes: CharacterClass = {
@@ -15,6 +62,7 @@ export const classes: CharacterClass = {
     damage: 0,
     speed: 0,
     mastery: 0,
+    backgrounds: {},
   },
   assassin: {
     name: 'Assassin',
@@ -22,6 +70,44 @@ export const classes: CharacterClass = {
     damage: 0,
     speed: 1,
     mastery: 1,
+    backgrounds: {
+      none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+      challenger: {
+        name: 'Challanger',
+        accuracy: 0,
+        damage: 1,
+        speed: 0,
+        mastery: 0,
+      },
+      blade: {
+        name: 'The Blade',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      enigma: {
+        name: 'Enigma',
+        accuracy: 1,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      ghost: {
+        name: 'Ghost',
+        accuracy: 0,
+        damage: 0,
+        speed: 1,
+        mastery: 0,
+      },
+      leageOfAssassins: {
+        name: 'League of Assassins',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 1,
+      },
+    },
   },
   berserker: {
     name: 'Berserker',
@@ -29,6 +115,44 @@ export const classes: CharacterClass = {
     damage: 2,
     speed: 1,
     mastery: 1,
+    backgrounds: {
+      none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+      brutality: {
+        name: 'Brutality',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      leader: {
+        name: 'Leader',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      dynamite: {
+        name: 'Dynamite',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      innerRage: {
+        name: 'Inner Rage',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 1,
+      },
+      demolitionist: {
+        name: 'Demolitionist',
+        accuracy: 1,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+    },
   },
   commando: {
     name: 'Commando',
@@ -36,6 +160,44 @@ export const classes: CharacterClass = {
     damage: 1,
     speed: 0,
     mastery: 2,
+    backgrounds: {
+      none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+      divorcee: {
+        name: 'Divorcee',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      revengeance: {
+        name: 'Revengeance',
+        accuracy: 0,
+        damage: 1,
+        speed: 0,
+        mastery: 0,
+      },
+      veteran: {
+        name: 'Veteran',
+        accuracy: 0,
+        damage: 0,
+        speed: 1,
+        mastery: 0,
+      },
+      whistleblower: {
+        name: 'Whistleblower',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 1,
+      },
+      companyMan: {
+        name: 'Company Man',
+        accuracy: 1,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+    },
   },
   gunzerker: {
     name: 'Gunzerker',
@@ -43,6 +205,44 @@ export const classes: CharacterClass = {
     damage: 2,
     speed: 0,
     mastery: 1,
+    backgrounds: {
+      none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+      roids: {
+        name: 'Roids',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      curiosityKills: {
+        name: 'Curiosity Kills',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 1,
+      },
+      saviour: {
+        name: 'Saviour',
+        accuracy: 0,
+        damage: 1,
+        speed: 0,
+        mastery: 0,
+      },
+      gottaGoFast: {
+        name: 'Gotta Go Fast',
+        accuracy: 0,
+        damage: 0,
+        speed: 1,
+        mastery: 0,
+      },
+      cowboy: {
+        name: 'Cowboy',
+        accuracy: 1,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+    },
   },
   hunter: {
     name: 'Hunter',
@@ -50,6 +250,44 @@ export const classes: CharacterClass = {
     damage: 1,
     speed: 0,
     mastery: 1,
+    backgrounds: {
+      none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+      prizeShot: {
+        name: 'Price Shot',
+        accuracy: 1,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      tracker: {
+        name: 'Tracker',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      partnerInCrime: {
+        name: 'Partner In Crime',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      silenceSchmilence: {
+        name: 'Silence Schmilence',
+        accuracy: 0,
+        damage: 1,
+        speed: 0,
+        mastery: 0,
+      },
+      moneyIsNotEverything: {
+        name: "Money Isn't Everything",
+        accuracy: 0,
+        damage: 0,
+        speed: 1,
+        mastery: 0,
+      },
+    },
   },
   mechromancer: {
     name: 'Mechromancer',
@@ -57,6 +295,44 @@ export const classes: CharacterClass = {
     damage: 1,
     speed: 1,
     mastery: 2,
+    backgrounds: {
+      none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+      antiBully: {
+        name: 'Anti-Bully',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      wellRead: {
+        name: 'Well-Read',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      wealthyParents: {
+        name: 'Wealthy Parents',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: -1,
+      },
+      accidentalMurderer: {
+        name: 'Accidental Murderer',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      clumsy: {
+        name: 'Clumsy',
+        accuracy: 2,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+    },
   },
   psycho: {
     name: 'Psycho',
@@ -64,6 +340,44 @@ export const classes: CharacterClass = {
     damage: 2,
     speed: 1,
     mastery: 2,
+    backgrounds: {
+      none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+      youAreDead: {
+        name: "YOU'RE DEAD!",
+        accuracy: 2,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      thud: {
+        name: 'THUD!',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 1,
+      },
+      grindGrindKill: {
+        name: 'GRIND GRIND KILL!',
+        accuracy: 0,
+        damage: 1,
+        speed: 1,
+        mastery: 0,
+      },
+      blood: {
+        name: 'BLOOD!',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      stopTalkingToMe: {
+        name: 'STOP TALKING TO ME!',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+    },
   },
   lightwalkSiren: {
     name: 'Siren (Lightwalk)',
@@ -71,6 +385,7 @@ export const classes: CharacterClass = {
     damage: 1,
     speed: 2,
     mastery: 0,
+    backgrounds: sirenBackgrounds,
   },
   phaselockSiren: {
     name: 'Siren (Phaselock)',
@@ -78,6 +393,7 @@ export const classes: CharacterClass = {
     damage: 1,
     speed: 1,
     mastery: 2,
+    backgrounds: sirenBackgrounds,
   },
   soldier: {
     name: 'Soldier',
@@ -85,5 +401,43 @@ export const classes: CharacterClass = {
     damage: 0,
     speed: 1,
     mastery: 2,
+    backgrounds: {
+      none: { name: '--none--', accuracy: 0, damage: 0, speed: 0, mastery: 0 },
+      crimson: {
+        name: 'Crimson',
+        accuracy: 1,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      commander: {
+        name: 'Commander',
+        accuracy: 0,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      medic: {
+        name: 'Medic',
+        accuracy: 0,
+        damage: -1,
+        speed: 0,
+        mastery: 0,
+      },
+      parkourPaladin: {
+        name: 'Parkour Paladin',
+        accuracy: -1,
+        damage: 0,
+        speed: 0,
+        mastery: 0,
+      },
+      notAPeaoplePerson: {
+        name: 'Not a People Person',
+        accuracy: 0,
+        damage: 1,
+        speed: 0,
+        mastery: 0,
+      },
+    },
   },
 }
