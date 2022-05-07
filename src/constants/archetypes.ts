@@ -9,6 +9,13 @@ type Archetype = {
 }
 
 export const archetypes: Archetype = {
+  none: {
+    name: '--none--',
+    accuracy: 0,
+    damage: 0,
+    speed: 0,
+    mastery: 0,
+  },
   enforcer: {
     name: 'Enforcer',
     accuracy: 1,
