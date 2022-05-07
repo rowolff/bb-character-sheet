@@ -4,7 +4,7 @@ interface ClassValues extends AttributeValues {
   name: string
 }
 
-type CharacterClass = {
+export type CharacterClass = {
   [key: string]: ClassValues
 }
 

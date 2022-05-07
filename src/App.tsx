@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components'
 
 import { AttributeValues } from './types/Attributes'
 import { AttributeBox } from './components/AttributeBox'
+import { Selector } from './components/Selector'
 import { attributeItems } from './constants/attributeItems'
 import { archetypes } from './constants/archetypes'
 import { classes } from './constants/classes'
@@ -30,12 +31,19 @@ type Character = {
 
 const App = () => {
   const [character, setCharacter] = useState<Character>(initialStats)
+
   const [archetypeStats, setArchetypeStats] = useState<AttributeValues>(
     initialStats.stats
   )
   const [classStats, setClassStats] = useState<AttributeValues>(
     initialStats.stats
   )
+
+  const [userStats, setUserStats] = useState<AttributeValues>(
+    initialStats.stats
+  )
+
+  const [statPoints, setStatpoints] = useState<number>(3)
 
   const updateArchetype = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const archetype = archetypes[e.currentTarget.value]
@@ -55,40 +63,43 @@ const App = () => {
     setClassStats(charClass)
   }
 
+  const updateUserStat = (stat: keyof AttributeValues, direction: number) => {
+    const newStatPoints = statPoints - direction
+    const newBaseStatNotNegative = character.stats[stat] + direction >= 0
+    if (0 <= newStatPoints && newStatPoints <= 3 && newBaseStatNotNegative) {
+      setStatpoints(newStatPoints)
+      setUserStats((prevStats) => ({
+        ...prevStats,
+        [stat]: prevStats[stat] + direction,
+      }))
+    }
+  }
+
   useEffect(() => {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
       stats: {
-        accuracy: archetypeStats.accuracy + classStats.accuracy,
-        damage: archetypeStats.damage + classStats.damage,
-        speed: archetypeStats.speed + classStats.speed,
-        mastery: archetypeStats.mastery + classStats.mastery,
+        accuracy:
+          archetypeStats.accuracy + classStats.accuracy + userStats.accuracy,
+        damage: archetypeStats.damage + classStats.damage + userStats.damage,
+        speed: archetypeStats.speed + classStats.speed + userStats.speed,
+        mastery:
+          archetypeStats.mastery + classStats.mastery + userStats.mastery,
       },
     }))
-  }, [archetypeStats, classStats])
+  }, [archetypeStats, classStats, userStats])
 
   return (
     <React.Fragment>
       <GlobalStyle />
-      <AttributeBox labels={attributeItems} values={character.stats} />
-
-      <h4>Select Archetype</h4>
-      <select onChange={updateArchetype}>
-        {Object.keys(archetypes).map((archetype) => (
-          <option key={archetype} value={archetype}>
-            {archetypes[archetype].name}
-          </option>
-        ))}
-      </select>
-
-      <h4>Select Class</h4>
-      <select onChange={updateClass}>
-        {Object.keys(classes).map((charClass) => (
-          <option key={charClass} value={charClass}>
-            {classes[charClass].name}
-          </option>
-        ))}
-      </select>
+      <h3>Stat Points to spend: {statPoints}</h3>
+      <AttributeBox
+        labels={attributeItems}
+        values={character.stats}
+        onUpdate={updateUserStat}
+      />
+      <Selector name="Archetype" onChange={updateArchetype} data={archetypes} />
+      <Selector name="Class" onChange={updateClass} data={classes} />
     </React.Fragment>
   )
 }

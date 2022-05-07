@@ -6,6 +6,7 @@ import { AttributeLabel, AttributeValues } from '../types/Attributes'
 interface Props {
   labels: AttributeLabel[]
   values: AttributeValues
+  onUpdate(stat: string, direction: number): void
 }
 
 const Wrapper = styled.div`
@@ -15,16 +16,18 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
 `
 
-export const AttributeBox: FC<Props> = ({ labels, values }) => {
+export const AttributeBox: FC<Props> = ({ labels, values, onUpdate }) => {
   return (
     <Wrapper>
       {labels
         .sort((a1, a2) => a1.position - a2.position)
         .map((label) => (
           <Attribute
+            id={label.id}
             name={label.name}
             shortHand={label.shortHand}
             value={values[label.id]}
+            update={onUpdate}
             key={label.position}
           />
         ))}

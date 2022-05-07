@@ -4,7 +4,7 @@ interface ArchetypeValues extends AttributeValues {
   name: string
 }
 
-type Archetype = {
+export type Archetype = {
   [key: string]: ArchetypeValues
 }
 
