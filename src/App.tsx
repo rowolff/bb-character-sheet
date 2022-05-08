@@ -95,6 +95,11 @@ const App = () => {
     }
   }
 
+  const resetUserStats = () => {
+    setUserStats(initialStats.stats)
+    setStatpoints(3)
+  }
+
   useEffect(() => {
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
@@ -126,7 +131,6 @@ const App = () => {
   return (
     <React.Fragment>
       <GlobalStyle />
-      <h3>Stat Points to spend: {statPoints}</h3>
       <AttributeBox
         labels={attributeItems}
         values={character.stats}
@@ -134,7 +138,10 @@ const App = () => {
       />
 
       <Group>
-        <h4>User Stats</h4>
+        <h4>
+          Free allocation (points to spend: {statPoints}){' '}
+          <button onClick={resetUserStats}>reset</button>
+        </h4>
         <StatOverview group="User" stats={userStats} />
       </Group>
       <Group>
