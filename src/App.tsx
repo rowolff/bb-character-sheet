@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
-import Buffer from 'buffer'
 import JSONCrush from 'jsoncrush'
 
 import { AttributeValues } from './types/Attributes'
