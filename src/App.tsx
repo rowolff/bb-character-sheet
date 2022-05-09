@@ -178,14 +178,12 @@ const App = () => {
         const buff = Buffer.Buffer.from(data, 'base64')
         let text = buff.toString()
         const urlChar = JSON.parse(text)
-        setTimeout(() => {
-          setCharacter(urlChar.baseChar)
-          setArchetypeStats(urlChar.archetype)
-          setClassStats(urlChar.charClass)
-          setBackgroundStats(urlChar.background)
-          setUserStats(urlChar.user)
-          setStatpoints(urlChar.statPoints)
-        }, 1000)
+        setCharacter((prev) => ({ ...prev, ...urlChar.baseChar }))
+        setArchetypeStats((prev) => ({ ...prev, ...urlChar.archetype }))
+        setClassStats((prev) => ({ ...prev, ...urlChar.charClass }))
+        setBackgroundStats((prev) => ({ ...prev, ...urlChar.background }))
+        setUserStats((prev) => ({ ...prev, ...urlChar.user }))
+        setStatpoints(() => urlChar.statPoints)
         charLoaded.current = true
       }
     }
