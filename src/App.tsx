@@ -175,7 +175,7 @@ const App = () => {
       const searchParams = new URLSearchParams(window.location.search)
       const data = searchParams.get('c')
       if (data) {
-        const buff = new Buffer.Buffer(data, 'base64')
+        const buff = Buffer.Buffer.from(data, 'base64')
         let text = buff.toString()
         const urlChar = JSON.parse(text)
         setTimeout(() => {
