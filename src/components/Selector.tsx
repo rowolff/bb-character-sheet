@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import styled from 'styled-components'
-import { Archetype } from '../constants/archetypes'
-import { CharacterClass } from '../constants/classes'
+import { Archetype } from '../data/archetypes'
+import { CharacterClass } from '../data/classes'
 
 interface Props {
   name: string

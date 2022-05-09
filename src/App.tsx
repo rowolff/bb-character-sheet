@@ -5,9 +5,11 @@ import { AttributeValues } from './types/Attributes'
 import { AttributeBox } from './components/AttributeBox'
 import { Selector } from './components/Selector'
 import { StatOverview } from './components/StatOverview'
-import { attributeItems } from './constants/attributeItems'
-import { archetypes } from './constants/archetypes'
-import { classes } from './constants/classes'
+import { attributeItems } from './data/attributeItems'
+import { archetypes } from './data/archetypes'
+import { classes } from './data/classes'
+
+const MAX_USER_STAT_POINTS = 3
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -51,7 +53,7 @@ const App = () => {
     initialStats.stats
   )
 
-  const [statPoints, setStatpoints] = useState<number>(3)
+  const [statPoints, setStatpoints] = useState<number>(MAX_USER_STAT_POINTS)
 
   const updateArchetype = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const archetype = archetypes[e.currentTarget.value]
@@ -86,7 +88,15 @@ const App = () => {
   const updateUserStat = (stat: keyof AttributeValues, direction: number) => {
     const newStatPoints = statPoints - direction
     const newBaseStatNotNegative = character.stats[stat] + direction >= 0
-    if (0 <= newStatPoints && newStatPoints <= 3 && newBaseStatNotNegative) {
+    const userStatAfterModificationNotNegative =
+      userStats[stat] + direction >= 0
+    const remainingStatPointsBetweenAllowedRange =
+      0 <= newStatPoints && newStatPoints <= MAX_USER_STAT_POINTS
+    if (
+      remainingStatPointsBetweenAllowedRange &&
+      newBaseStatNotNegative &&
+      userStatAfterModificationNotNegative
+    ) {
       setStatpoints(newStatPoints)
       setUserStats((prevStats) => ({
         ...prevStats,
@@ -97,7 +107,7 @@ const App = () => {
 
   const resetUserStats = () => {
     setUserStats(initialStats.stats)
-    setStatpoints(3)
+    setStatpoints(MAX_USER_STAT_POINTS)
   }
 
   useEffect(() => {
