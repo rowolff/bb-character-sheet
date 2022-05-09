@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
 import Buffer from 'buffer'
+import JSONCrush from 'jsoncrush'
 
 import { AttributeValues } from './types/Attributes'
 import { AttributeBox } from './components/AttributeBox'
@@ -161,11 +162,9 @@ const App = () => {
       user: userStats,
       statPoints: statPoints,
     }
-    const encodedCharacter = Buffer.Buffer.from(
-      JSON.stringify(urlChar)
-    ).toString('base64')
+    const compressed = JSONCrush.crush(JSON.stringify(urlChar))
     const url = new URL(window.location.href)
-    url.searchParams.set('c', encodedCharacter)
+    url.searchParams.set('c', compressed)
     window.history.pushState({}, '', url)
   }, [character]) // eslint-disable-line
 
@@ -175,9 +174,7 @@ const App = () => {
       const searchParams = new URLSearchParams(window.location.search)
       const data = searchParams.get('c')
       if (data) {
-        const buff = Buffer.Buffer.from(data, 'base64')
-        let text = buff.toString()
-        const urlChar = JSON.parse(text)
+        const urlChar = JSON.parse(JSONCrush.uncrush(data))
         setCharacter((prev) => ({ ...prev, ...urlChar.baseChar }))
         setArchetypeStats((prev) => ({ ...prev, ...urlChar.archetype }))
         setClassStats((prev) => ({ ...prev, ...urlChar.charClass }))
