@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import styled, { createGlobalStyle } from 'styled-components'
+import Buffer from 'buffer'
 
 import { AttributeValues } from './types/Attributes'
 import { AttributeBox } from './components/AttributeBox'
@@ -28,12 +29,14 @@ const Group = styled.div`
 const initialStats = {
   archetype: 'none',
   charClass: 'none',
+  background: 'none',
   stats: { accuracy: 0, damage: 0, speed: 0, mastery: 0 },
 }
 
 type Character = {
   archetype: string
   charClass: string
+  background: string
   stats: AttributeValues
 }
 
@@ -56,10 +59,11 @@ const App = () => {
   const [statPoints, setStatpoints] = useState<number>(MAX_USER_STAT_POINTS)
 
   const updateArchetype = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const archetype = archetypes[e.currentTarget.value]
+    const archetypeKey = e.currentTarget.value
+    const archetype = archetypes[archetypeKey]
     setCharacter((prevCharacter) => ({
       ...prevCharacter,
-      archetype: archetype.name,
+      archetype: archetypeKey,
     }))
     setArchetypeStats(archetype)
   }
@@ -76,13 +80,18 @@ const App = () => {
   }
 
   const updateBackground = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const backgroundKey = e.currentTarget.value
     const charClass = classes[character.charClass]
     const classBackgrounds = charClass.backgrounds
-    const background = classBackgrounds
-      ? classBackgrounds[e.currentTarget.value]
-      : null
+    const background = classBackgrounds ? classBackgrounds[backgroundKey] : null
 
-    if (background) setBackgroundStats(background)
+    if (background) {
+      setBackgroundStats(background)
+      setCharacter((prevCharacter) => ({
+        ...prevCharacter,
+        background: backgroundKey,
+      }))
+    }
   }
 
   const updateUserStat = (stat: keyof AttributeValues, direction: number) => {
@@ -138,6 +147,50 @@ const App = () => {
     }))
   }, [archetypeStats, classStats, userStats, backgroundStats])
 
+  const firstUpdate = useRef(true)
+  useEffect(() => {
+    if (firstUpdate.current) {
+      firstUpdate.current = false
+      return
+    }
+    const urlChar = {
+      baseChar: character,
+      archetype: archetypeStats,
+      charClass: classStats,
+      background: backgroundStats,
+      user: userStats,
+      statPoints: statPoints,
+    }
+    const encodedCharacter = Buffer.Buffer.from(
+      JSON.stringify(urlChar)
+    ).toString('base64')
+    const url = new URL(window.location.href)
+    url.searchParams.set('c', encodedCharacter)
+    window.history.pushState({}, '', url)
+  }, [character]) // eslint-disable-line
+
+  const charLoaded = useRef(false)
+  useEffect(() => {
+    if (!charLoaded.current) {
+      const searchParams = new URLSearchParams(window.location.search)
+      const data = searchParams.get('c')
+      if (data) {
+        const buff = new Buffer.Buffer(data, 'base64')
+        let text = buff.toString()
+        const urlChar = JSON.parse(text)
+        setTimeout(() => {
+          setCharacter(urlChar.baseChar)
+          setArchetypeStats(urlChar.archetype)
+          setClassStats(urlChar.charClass)
+          setBackgroundStats(urlChar.background)
+          setUserStats(urlChar.user)
+          setStatpoints(urlChar.statPoints)
+        }, 1000)
+        charLoaded.current = true
+      }
+    }
+  }, [])
+
   return (
     <React.Fragment>
       <GlobalStyle />
@@ -154,17 +207,24 @@ const App = () => {
         </h4>
         <StatOverview group="User" stats={userStats} />
       </Group>
+
       <Group>
         <Selector
           name="Archetype"
           onChange={updateArchetype}
           data={archetypes}
+          current={character.archetype}
         />
         <StatOverview group="Archetype" stats={archetypeStats} />
       </Group>
 
       <Group>
-        <Selector name="Class" onChange={updateClass} data={classes} />
+        <Selector
+          name="Class"
+          onChange={updateClass}
+          data={classes}
+          current={character.charClass}
+        />
         <StatOverview group="Class" stats={classStats} />
       </Group>
 
@@ -173,6 +233,7 @@ const App = () => {
           name="Background"
           onChange={updateBackground}
           data={classes[character.charClass].backgrounds}
+          current={character.background}
         />
         <StatOverview group="Background" stats={backgroundStats} />
       </Group>

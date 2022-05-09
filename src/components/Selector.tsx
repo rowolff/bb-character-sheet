@@ -7,6 +7,7 @@ interface Props {
   name: string
   onChange(e: React.ChangeEvent<HTMLSelectElement>): void
   data?: Archetype | CharacterClass
+  current: string
 }
 
 const Wrapper = styled.div`
@@ -18,13 +19,13 @@ const Wrapper = styled.div`
   }
 `
 
-export const Selector: FC<Props> = ({ name, onChange, data }) => {
+export const Selector: FC<Props> = ({ name, onChange, data, current }) => {
   if (!data) return null
 
   return (
     <Wrapper>
       <h4>Select {name}</h4>
-      <select onChange={onChange}>
+      <select onChange={onChange} value={current}>
         {Object.keys(data).map((itemKey) => {
           return (
             <option key={itemKey} value={itemKey}>
