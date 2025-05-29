@@ -9,6 +9,7 @@ import { StatOverview } from './components/StatOverview'
 import { attributeItems } from './data/attributeItems'
 import { archetypes } from './data/archetypes'
 import { classes } from './data/classes'
+import { CreateGun } from './components/CreateGun'
 
 const MAX_USER_STAT_POINTS = 3
 
@@ -230,6 +231,10 @@ const App = () => {
           current={character.background}
         />
         <StatOverview group="Background" stats={backgroundStats} />
+      </Group>
+
+      <Group>
+        <CreateGun />
       </Group>
     </React.Fragment>
   )
