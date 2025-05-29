@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { gunTable, GunType, gunRarities } from '../data/guntable'
 import { Manufacturer } from '../data/manufacturers'
 import { Rarity } from '../data/rarities'
+import { getRandomElementalOutcome } from '../data/elemental_table'
 import styled from 'styled-components'
 
 const Button = styled.button`
@@ -30,6 +31,8 @@ interface RandomGun {
   manufacturer: Manufacturer;
   rarity: Rarity;
   elemental: boolean;
+  elementType?: string | null;
+  addedDamage?: string;
 }
 
 export const CreateGun: React.FC = () => {
@@ -44,10 +47,15 @@ export const CreateGun: React.FC = () => {
     const randomRarityRow = gunRarities[Math.floor(Math.random() * gunRarities.length)]
     const randomRarityInfo = randomRarityRow[Math.floor(Math.random() * randomRarityRow.length)]
     
+    // Get elemental outcome based on the rarity
+    const elementalOutcome = getRandomElementalOutcome(randomRarityInfo.rarity)
+    
     setSelectedGun({
       ...randomGun,
       rarity: randomRarityInfo.rarity,
-      elemental: randomRarityInfo.elemental
+      elemental: elementalOutcome.elementType !== null,
+      elementType: elementalOutcome.elementType,
+      addedDamage: elementalOutcome.addedDamage
     })
   }
 
@@ -56,9 +64,13 @@ export const CreateGun: React.FC = () => {
       <Button onClick={generateRandomGun}>Generate Random Gun</Button>
       {selectedGun && (
         <GunDisplay>
-          <p><strong>Rarity:</strong> {selectedGun.rarity}{selectedGun.elemental ? " (Elemental)" : ""}</p>
+          <p><strong>Rarity:</strong> {selectedGun.rarity}</p>
           <p><strong>Manufacturer:</strong> {selectedGun.manufacturer}</p>
           <p><strong>Type:</strong> {selectedGun.type}</p>
+          <p><strong>Damage Bonus:</strong> {selectedGun.addedDamage}</p>
+          {selectedGun.elemental && (
+            <p><strong>Element:</strong> {selectedGun.elementType}</p>
+          )}
         </GunDisplay>
       )}
     </div>
