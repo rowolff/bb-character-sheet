@@ -22,6 +22,43 @@ export class GunStats {
     }
 }
 
+// Define the structure for level ranges in gun types
+interface LevelRange {
+    range: readonly [number, number];
+    stats: GunStats;
+}
+
+/**
+ * Get gun stats for a specific gun type and character level
+ * @param gunTypeKey The key of the gun type (from gt object keys)
+ * @param level The character level (1-30)
+ * @returns The GunStats for that level range along with any Range and Bonus properties
+ */
+export function getGunStatsByLevel(gunTypeKey: keyof typeof gt, level: number): { stats: GunStats, range?: string, bonus?: string } | undefined {
+    const gunTypeObj = gt[gunTypeKey];
+
+    // Check if gun type has byLevel data
+    if (!('byLevel' in gunTypeObj)) {
+        return undefined;
+    }
+
+    // Find the level range that includes the specified level
+    const levelData = gunTypeObj.byLevel.find(
+        (levelRange: LevelRange) => level >= levelRange.range[0] && level <= levelRange.range[1]
+    );
+
+    if (!levelData) {
+        return undefined;
+    }
+
+    // Return stats along with range and bonus if they exist
+    return {
+        stats: levelData.stats,
+        range: 'Range' in gunTypeObj ? gunTypeObj.Range : undefined,
+        bonus: 'Bonus' in gunTypeObj ? gunTypeObj.Bonus : undefined
+    };
+}
+
 export const gt = {
     PISTOL: {
         name: 'Pistol', byLevel: [
