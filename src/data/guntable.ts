@@ -15,9 +15,24 @@ export class GunStats {
     public Damage: string;
 
     constructor(config: GunStatsConfig = {}) {
-        this.LOW = config.LOW || { name: '2-7', Hits: 0, Crits: 0 };
-        this.MEDIUM = config.MEDIUM || { name: '8-15', Hits: 0, Crits: 0 };
-        this.HIGH = config.HIGH || { name: '16+', Hits: 0, Crits: 0 };
+        this.LOW = {
+            name: '2-7',
+            Hits: config.LOW?.Hits ?? 0,
+            Crits: config.LOW?.Crits ?? 0,
+            ...(config.LOW?.name ? { name: config.LOW.name } : {})
+        };
+        this.MEDIUM = {
+            name: '8-15',
+            Hits: config.MEDIUM?.Hits ?? 0,
+            Crits: config.MEDIUM?.Crits ?? 0,
+            ...(config.MEDIUM?.name ? { name: config.MEDIUM.name } : {})
+        };
+        this.HIGH = {
+            name: '16+',
+            Hits: config.HIGH?.Hits ?? 0,
+            Crits: config.HIGH?.Crits ?? 0,
+            ...(config.HIGH?.name ? { name: config.HIGH.name } : {})
+        };
         this.Damage = config.Damage || '0';
     }
 }

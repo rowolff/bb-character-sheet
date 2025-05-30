@@ -155,15 +155,46 @@ export const CreateGun: React.FC = () => {
                     <p><strong>Rarity:</strong> {selectedGun.rarity}</p>
                     <p><strong>Manufacturer:</strong> {selectedGun.manufacturer.name}</p>
                     <p><strong>Type:</strong> {selectedGun.type.name}</p>
+                    <p><strong>Damage Type:</strong> {selectedGun.damageTypes.join(" + ")}</p>
+                    <p><strong>Damage Bonus:</strong> {selectedGun.addedDamage}</p>
                     {selectedGun.stats && (
                         <>
                             <p><strong>Base Damage:</strong> {selectedGun.stats.Damage}</p>
                             {selectedGun.range && <p><strong>Range:</strong> {selectedGun.range}</p>}
                             {selectedGun.bonus && <p><strong>Weapon Bonus:</strong> {selectedGun.bonus}</p>}
+
+                            <div style={{ marginTop: '10px', marginBottom: '10px' }}>
+                                <p><strong>Stats:</strong></p>
+                                <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '5px' }}>
+                                    <thead>
+                                        <tr>
+                                            <th style={{ textAlign: 'left', padding: '3px 5px', borderBottom: '1px solid #3a2e8a' }}>Roll</th>
+                                            <th style={{ textAlign: 'center', padding: '3px 5px', borderBottom: '1px solid #3a2e8a' }}>Hits</th>
+                                            <th style={{ textAlign: 'center', padding: '3px 5px', borderBottom: '1px solid #3a2e8a' }}>Crits</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td style={{ padding: '3px 5px' }}>{selectedGun.stats.LOW.name || 'LOW'}</td>
+                                            <td style={{ textAlign: 'center', padding: '3px 5px' }}>{selectedGun.stats.LOW.Hits}</td>
+                                            <td style={{ textAlign: 'center', padding: '3px 5px' }}>{selectedGun.stats.LOW.Crits}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{ padding: '3px 5px' }}>{selectedGun.stats.MEDIUM.name || 'MEDIUM'}</td>
+                                            <td style={{ textAlign: 'center', padding: '3px 5px' }}>{selectedGun.stats.MEDIUM.Hits}</td>
+                                            <td style={{ textAlign: 'center', padding: '3px 5px' }}>{selectedGun.stats.MEDIUM.Crits}</td>
+                                        </tr>
+                                        <tr>
+                                            <td style={{ padding: '3px 5px' }}>{selectedGun.stats.HIGH.name || 'HIGH'}</td>
+                                            <td style={{ textAlign: 'center', padding: '3px 5px' }}>{selectedGun.stats.HIGH.Hits}</td>
+                                            <td style={{ textAlign: 'center', padding: '3px 5px' }}>{selectedGun.stats.HIGH.Crits}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
                         </>
                     )}
-                    <p><strong>Damage Type:</strong> {selectedGun.damageTypes.join(" + ")}</p>
-                    <p><strong>Damage Bonus:</strong> {selectedGun.addedDamage}</p>
+
                 </GunDisplay>
             )}
         </div>
