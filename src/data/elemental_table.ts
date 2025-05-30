@@ -254,9 +254,14 @@ export function getElementalOutcome(percentileRoll: number, rarity: Rarity): Ele
 }
 
 // Helper function to get a random element outcome
-export function getRandomElementalOutcome(rarity: Rarity): ElementOutcome {
+export function getRandomElementalOutcome(rarity: Rarity, elementalBonus?: number): ElementOutcome {
     // Get a random roll and outcome
-    const roll = Math.floor(Math.random() * 100) + 1;
+    let roll = Math.floor(Math.random() * 100) + 1;
+    // If an elemental bonus is provided, adjust the roll
+    if (elementalBonus) {
+        // Ensure the roll is still within 1-100 after adding the bonus
+        roll = Math.max(1, Math.min(100, roll + elementalBonus));
+    }
     const outcome = getElementalOutcome(roll, rarity);
 
     return {

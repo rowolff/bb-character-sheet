@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { gunTable, GunType, gunRarities, getGunStatsByLevel, gt } from '../data/guntable'
-import { Manufacturer } from '../data/manufacturers'
+import { elementalRules, Manufacturer } from '../data/manufacturers'
 import { Rarity } from '../data/rarities'
 import { getRandomElementalOutcome } from '../data/elemental_table'
 import styled from 'styled-components'
@@ -81,11 +81,23 @@ export const CreateGun: React.FC = () => {
         const randomRarityRow = gunRarities[Math.floor(Math.random() * gunRarities.length)]
         const randomRarityInfo = randomRarityRow[Math.floor(Math.random() * randomRarityRow.length)]
 
-        // Get elemental outcome based on the rarity
-        const elementalOutcome = randomRarityInfo.elemental
-            ? getRandomElementalOutcome(randomRarityInfo.rarity)
-            : { damageTypes: [damageTypes.KINETIC], addedDamage: "0" }
+        let elementalOutcome: { damageTypes: DamageType[], addedDamage: string } = { damageTypes: [damageTypes.KINETIC], addedDamage: "0" }
 
+        // Get elemental outcome based on manufacturer rules and the rarity
+        switch (randomGun.manufacturer.elemental) {
+            case elementalRules.ALWAYS:
+                while (elementalOutcome.damageTypes.includes(damageTypes.KINETIC)) {
+                    elementalOutcome = getRandomElementalOutcome(randomRarityInfo.rarity, randomGun.manufacturer.elementalBonuses[randomRarityInfo.rarity])
+                }
+                break;
+            case elementalRules.NORMAL:
+                elementalOutcome = getRandomElementalOutcome(randomRarityInfo.rarity, randomGun.manufacturer.elementalBonuses[randomRarityInfo.rarity])
+                break;
+            case elementalRules.NEVER:
+                break;
+            default:
+                break;
+        }
         // Create base gun
         const baseGun: RandomGun = {
             type: randomGun.type,
@@ -195,6 +207,16 @@ export const CreateGun: React.FC = () => {
                         </>
                     )}
 
+                    {/* Manufacturer Info Section */}
+                    <div style={{ marginTop: '15px', borderTop: '1px solid #3a2e8a', paddingTop: '10px' }}>
+                        <p><strong>Manufacturer Details</strong></p>
+                        <p style={{ fontSize: '14px', marginTop: '5px' }}>
+                            <strong>Effect ({selectedGun.rarity}):</strong> {selectedGun.manufacturer.stats[selectedGun.rarity as keyof typeof selectedGun.manufacturer.stats]}
+                        </p>
+                        <p style={{ fontSize: '14px', marginTop: '5px' }}>
+                            <strong>Gun Info:</strong> {selectedGun.manufacturer.gunInfo}
+                        </p>
+                    </div>
                 </GunDisplay>
             )}
         </div>
