@@ -1,5 +1,5 @@
-import { damageTypes } from './damage_types';
-import { rarities, Rarity } from './rarities';
+import { damageTypes as dt } from './damage_types';
+import { rarities as r, Rarity } from './rarities';
 
 // Define an outcome that includes both element type and added damage
 interface ElementOutcome {
@@ -33,50 +33,50 @@ export const elementalTable: RollRange[] = [
   { 
     range: [1, 50], 
     outcomes: [
-      { elementType: NON_ELEMENTAL, addedDamage: "0" },
-      { elementType: damageTypes.KINETIC, addedDamage: "1d4" }
+      { elementType: dt.KINETIC, addedDamage: "0" },
+      { elementType: dt.INCENDIARY, addedDamage: "1d4" }
     ]
   },
   { 
     range: [51, 60], 
     outcomes: [
-      { elementType: damageTypes.INCENDIARY, addedDamage: "1d6" },
-      { elementType: damageTypes.EXPLOSIVE, addedDamage: "2d4" }
+      { elementType: dt.INCENDIARY, addedDamage: "1d6" },
+      { elementType: dt.EXPLOSIVE, addedDamage: "2d4" }
     ]
   },
   { 
     range: [61, 70], 
     outcomes: [
-      { elementType: damageTypes.SHOCK, addedDamage: "1d8" },
-      { elementType: damageTypes.RADIATION, addedDamage: "1d10" }
+      { elementType: dt.SHOCK, addedDamage: "1d8" },
+      { elementType: dt.RADIATION, addedDamage: "1d10" }
     ]
   },
   { 
     range: [71, 80], 
     outcomes: [
-      { elementType: damageTypes.CORROSIVE, addedDamage: "1d6+1" },
-      { elementType: damageTypes.INCENDIARY, addedDamage: "2d4" }
+      { elementType: dt.CORROSIVE, addedDamage: "1d6+1" },
+      { elementType: dt.INCENDIARY, addedDamage: "2d4" }
     ]
   },
   { 
     range: [81, 90], 
     outcomes: [
-      { elementType: damageTypes.RADIATION, addedDamage: "1d10" },
-      { elementType: damageTypes.CORROSIVE, addedDamage: "1d8+1" }
+      { elementType: dt.RADIATION, addedDamage: "1d10" },
+      { elementType: dt.CORROSIVE, addedDamage: "1d8+1" }
     ]
   },
   { 
     range: [91, 95], 
     outcomes: [
-      { elementType: damageTypes.CRYO, addedDamage: "1d8" },
-      { elementType: damageTypes.SHOCK, addedDamage: "1d6+2" }
+      { elementType: dt.CRYO, addedDamage: "1d8" },
+      { elementType: dt.SHOCK, addedDamage: "1d6+2" }
     ]
   },
   { 
     range: [96, 100], 
     outcomes: [
-      { elementType: damageTypes.EXPLOSIVE, addedDamage: "2d6" },
-      { elementType: damageTypes.CRYO, addedDamage: "1d12" }
+      { elementType: dt.EXPLOSIVE, addedDamage: "2d6" },
+      { elementType: dt.CRYO, addedDamage: "1d12" }
     ]
   }
 ];
@@ -97,7 +97,7 @@ export function getElementalOutcome(percentileRoll: number): ElementOutcome | un
 export function getRandomElementalOutcome(rarity?: Rarity): ElementalOutcome {
   // Get a random roll and outcome
   const roll = Math.floor(Math.random() * 100) + 1;
-  const outcome = getElementalOutcome(roll) || { elementType: damageTypes.KINETIC, addedDamage: "0" };
+  const outcome = getElementalOutcome(roll) || { elementType: dt.KINETIC, addedDamage: "0" };
   
   // If rarity provided, modify the damage dice based on rarity
   if (rarity) {
@@ -122,15 +122,15 @@ export function getRandomElementalOutcome(rarity?: Rarity): ElementalOutcome {
 // Get rarity multiplier to scale damage dice
 function getRarityMultiplier(rarity: Rarity): number {
   switch (rarity) {
-    case rarities.COMMON:
+    case r.COMMON:
       return 1;
-    case rarities.UNCOMMON:
+    case r.UNCOMMON:
       return 1.25;
-    case rarities.RARE:
+    case r.RARE:
       return 1.5;
-    case rarities.EPIC:
+    case r.EPIC:
       return 1.75;
-    case rarities.LEGENDARY:
+    case r.LEGENDARY:
       return 2;
     default:
       return 1;
