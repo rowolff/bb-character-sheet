@@ -6,8 +6,6 @@ export interface GunStatsConfig {
     MEDIUM?: { name?: string, Hits: number, Crits: number };
     HIGH?: { name?: string, Hits: number, Crits: number };
     Damage?: string;
-    Range?: string;
-    Bonus?: string;
 }
 
 export class GunStats {
@@ -15,16 +13,12 @@ export class GunStats {
     public MEDIUM: { name?: string, Hits: number, Crits: number };
     public HIGH: { name?: string, Hits: number, Crits: number };
     public Damage: string;
-    public Range: string;
-    public Bonus: string;
 
     constructor(config: GunStatsConfig = {}) {
         this.LOW = config.LOW || { name: '2-7', Hits: 0, Crits: 0 };
         this.MEDIUM = config.MEDIUM || { name: '8-15', Hits: 0, Crits: 0 };
         this.HIGH = config.HIGH || { name: '16+', Hits: 0, Crits: 0 };
         this.Damage = config.Damage || '0';
-        this.Range = config.Range || '0';
-        this.Bonus = config.Bonus || '0';
     }
 }
 
@@ -33,139 +27,148 @@ export const gt = {
         name: 'Pistol', byLevel: [
             {
                 range: [1, 6],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 3, Crits: 0 }, Damage: '2d4', Range: '5' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 3, Crits: 0 }, Damage: '2d4' })
             },
             {
                 range: [7, 12],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 3, Crits: 1 }, Damage: '1d6', Range: '5' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 3, Crits: 1 }, Damage: '1d6' })
             },
             {
                 range: [13, 18],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '2d6', Range: '5' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '2d6' })
             },
             {
                 range: [19, 24],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 1, Crits: 2 }, Damage: '2d8', Range: '5' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 1, Crits: 2 }, Damage: '2d8' })
             },
             {
                 range: [25, 30],
-                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '2d8', Range: '5' })
-            }]
+                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '2d8' })
+            }],
+        Range: '5'
     },
     SMG: {
         name: 'Submachine Gun', byLevel: [
             {
                 range: [1, 6],
-                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 0 }, HIGH: { Hits: 5, Crits: 0 }, Damage: '1d4', Range: '5' })
+                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 0 }, HIGH: { Hits: 5, Crits: 0 }, Damage: '1d4' })
             },
             {
                 range: [7, 12],
-                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 4, Crits: 0 }, HIGH: { Hits: 5, Crits: 1 }, Damage: '2d4', Range: '5' })
+                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 4, Crits: 0 }, HIGH: { Hits: 5, Crits: 1 }, Damage: '2d4' })
             },
             {
                 range: [13, 18],
-                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 1 }, HIGH: { Hits: 5, Crits: 1 }, Damage: '1d6', Range: '5' })
+                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 1 }, HIGH: { Hits: 5, Crits: 1 }, Damage: '1d6' })
             },
             {
                 range: [19, 24],
-                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 4, Crits: 1 }, Damage: '2d6', Range: '5' })
+                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 4, Crits: 1 }, Damage: '2d6' })
             },
             {
                 range: [25, 30],
-                stats: new GunStats({ LOW: { Hits: 2, Crits: 2 }, MEDIUM: { Hits: 3, Crits: 2 }, HIGH: { Hits: 5, Crits: 2 }, Damage: '1d10', Range: '5' })
-            }]
+                stats: new GunStats({ LOW: { Hits: 2, Crits: 2 }, MEDIUM: { Hits: 3, Crits: 2 }, HIGH: { Hits: 5, Crits: 2 }, Damage: '1d10' })
+            }],
+        Range: '5'
     },
     SHOTGUN: {
         name: 'Shotgun', byLevel: [
             {
                 range: [1, 6],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d8', Range: '4', Bonus: 'If Range 2 or Less: +2 Damage' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d8' })
             },
             {
                 range: [7, 12],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '2d8', Range: '4', Bonus: 'If Range 2 or Less: +2 Damage' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '2d8' })
             },
             {
                 range: [13, 18],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '1d8', Range: '4', Bonus: 'If Range 2 or Less: +2 Damage' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '1d8' })
             },
             {
                 range: [19, 24],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '2d10', Range: '4', Bonus: 'If Range 2 or Less: +2 Damage' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '2d10' })
             },
             {
                 range: [25, 30],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '1d12', Range: '4', Bonus: 'If Range 2 or Less: +2 Damage' })
-            }]
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '1d12' })
+            }],
+        Range: '4',
+        Bonus: 'If Range 2 or Less: +2 Damage'
     },
     COMBAT_RIFLE: {
         name: 'Combat Rifle', byLevel: [
             {
                 range: [1, 6],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 0 }, HIGH: { Hits: 3, Crits: 1 }, Damage: '1d6', Range: '6' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 0 }, HIGH: { Hits: 3, Crits: 1 }, Damage: '1d6' })
             },
             {
                 range: [7, 12],
-                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 0 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '1d8', Range: '6' })
+                stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 0 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '1d8' })
             },
             {
                 range: [13, 18],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '1d8', Range: '6' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '1d8' })
             },
             {
                 range: [19, 24],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 3, Crits: 1 }, Damage: '2d6', Range: '6' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 3, Crits: 1 }, Damage: '2d6' })
             },
             {
                 range: [25, 30],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 3 }, Damage: '1d10', Range: '6' })
-            }]
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 2, Crits: 1 }, HIGH: { Hits: 2, Crits: 3 }, Damage: '1d10' })
+            }],
+        Range: '6'
     },
     SNIPER_RIFLE: {
         name: 'Sniper Rifle', byLevel: [
             {
                 range: [1, 6],
-                stats: new GunStats({ LOW: { Hits: 0, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d10', Range: '8', Bonus: 'If Range 3+: +3 Accuracy' })
+                stats: new GunStats({ LOW: { Hits: 0, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d10' })
             },
             {
                 range: [7, 12],
-                stats: new GunStats({ LOW: { Hits: 0, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d12', Range: '8', Bonus: 'If Range 3+: +3 Accuracy' })
+                stats: new GunStats({ LOW: { Hits: 0, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d12' })
             },
             {
                 range: [13, 18],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 1, Crits: 2 }, Damage: '1d10', Range: '8', Bonus: 'If Range 3+: +3 Accuracy' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 1, Crits: 2 }, Damage: '1d10' })
             },
             {
                 range: [19, 24],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 1, Crits: 2 }, Damage: '2d10', Range: '8', Bonus: 'If Range 3+: +3 Accuracy' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 1, Crits: 2 }, Damage: '2d10' })
             },
             {
                 range: [25, 30],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '1d12', Range: '8', Bonus: 'If Range 3+: +3 Accuracy' })
-            }]
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 2, Crits: 2 }, Damage: '1d12' })
+            }],
+        Range: '8',
+        Bonus: 'If Range 3+: +3 Accuracy'
     },
     RPG: {
         name: 'Rocket Launcher', byLevel: [
             {
                 range: [1, 6],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d12', Range: '4', Bonus: 'Splash' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d12' })
             },
             {
                 range: [7, 12],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '2d10', Range: '4', Bonus: 'Splash' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '2d10' })
             },
             {
                 range: [13, 18],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 2 }, Damage: '1d12', Range: '4', Bonus: 'Splash' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 2 }, Damage: '1d12' })
             },
             {
                 range: [19, 24],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '2d12', Range: '4', Bonus: 'Splash' })
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '2d12' })
             },
             {
                 range: [25, 30],
-                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '1d20', Range: '4', Bonus: 'Splash' })
-            }]
+                stats: new GunStats({ LOW: { Hits: 1, Crits: 1 }, MEDIUM: { Hits: 1, Crits: 1 }, HIGH: { Hits: 2, Crits: 1 }, Damage: '1d20' })
+            }],
+        Range: '4',
+        Bonus: 'Splash'
     },
     CHOICE: { name: 'Choice' },
 } as const;
