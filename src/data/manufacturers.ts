@@ -1,13 +1,13 @@
 export const manufacturers = {
-    SKULLDUGGER: 'Skulldugger',
-    FERIORE: 'Feriore',
-    DAHLIA: 'Dahlia',
-    BLACKPOWDER: 'Black Powder',
-    ALAS: 'Alas!',
-    MALEFACTOR: 'Malefactor',
-    STOKER: 'Stoker',
-    HYPERIUS: 'Hyperius',
-    TORGUE: 'Torgue',
-    CHOICE: 'Choice',
+    SKULLDUGGER: { name: 'Skulldugger' },
+    FERIORE: { name: 'Feriore' },
+    DAHLIA: { name: 'Dahlia' },
+    BLACKPOWDER: { name: 'Black Powder' },
+    ALAS: { name: 'Alas!' },
+    MALEFACTOR: { name: 'Malefactor' },
+    STOKER: { name: 'Stoker' },
+    HYPERIUS: { name: 'Hyperius' },
+    TORGUE: { name: 'Torgue' },
+    CHOICE: { name: 'Choice' },
 } as const;
 export type Manufacturer = (typeof manufacturers)[keyof typeof manufacturers];

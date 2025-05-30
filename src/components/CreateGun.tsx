@@ -66,8 +66,8 @@ export const CreateGun: React.FC = () => {
             {selectedGun && (
                 <GunDisplay>
                     <p><strong>Rarity:</strong> {selectedGun.rarity}</p>
-                    <p><strong>Manufacturer:</strong> {selectedGun.manufacturer}</p>
-                    <p><strong>Type:</strong> {selectedGun.type}</p>
+                    <p><strong>Manufacturer:</strong> {selectedGun.manufacturer.name}</p>
+                    <p><strong>Type:</strong> {selectedGun.type.name}</p>
                     <p><strong>Damage Type:</strong> {selectedGun.damageTypes.join(" + ")}</p>
                     <p><strong>Damage Bonus:</strong> {selectedGun.addedDamage}</p>
                 </GunDisplay>
