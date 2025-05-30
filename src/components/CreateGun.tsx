@@ -4,6 +4,7 @@ import { Manufacturer } from '../data/manufacturers'
 import { Rarity } from '../data/rarities'
 import { getRandomElementalOutcome } from '../data/elemental_table'
 import styled from 'styled-components'
+import { DamageType, damageTypes } from '../data/damage_types'
 
 const Button = styled.button`
   padding: 10px 15px;
@@ -27,52 +28,50 @@ const GunDisplay = styled.div`
 `
 
 interface RandomGun {
-  type: GunType;
-  manufacturer: Manufacturer;
-  rarity: Rarity;
-  elemental: boolean;
-  elementType?: string | null;
-  addedDamage?: string;
+    type: GunType;
+    manufacturer: Manufacturer;
+    rarity: Rarity;
+    damageType: DamageType;
+    addedDamage: string;
 }
 
 export const CreateGun: React.FC = () => {
-  const [selectedGun, setSelectedGun] = useState<RandomGun | null>(null)
+    const [selectedGun, setSelectedGun] = useState<RandomGun | null>(null)
 
-  const generateRandomGun = () => {
-    // Select random gun
-    const randomRow = gunTable[Math.floor(Math.random() * gunTable.length)]
-    const randomGun = randomRow[Math.floor(Math.random() * randomRow.length)]
-    
-    // Select random rarity
-    const randomRarityRow = gunRarities[Math.floor(Math.random() * gunRarities.length)]
-    const randomRarityInfo = randomRarityRow[Math.floor(Math.random() * randomRarityRow.length)]
-    
-    // Get elemental outcome based on the rarity
-    const elementalOutcome = getRandomElementalOutcome(randomRarityInfo.rarity)
-    
-    setSelectedGun({
-      ...randomGun,
-      rarity: randomRarityInfo.rarity,
-      elemental: elementalOutcome.elementType !== null,
-      elementType: elementalOutcome.elementType,
-      addedDamage: elementalOutcome.addedDamage
-    })
-  }
+    const generateRandomGun = () => {
+        // Select random gun
+        const randomRow = gunTable[Math.floor(Math.random() * gunTable.length)]
+        const randomGun = randomRow[Math.floor(Math.random() * randomRow.length)]
 
-  return (
-    <div>
-      <Button onClick={generateRandomGun}>Generate Random Gun</Button>
-      {selectedGun && (
-        <GunDisplay>
-          <p><strong>Rarity:</strong> {selectedGun.rarity}</p>
-          <p><strong>Manufacturer:</strong> {selectedGun.manufacturer}</p>
-          <p><strong>Type:</strong> {selectedGun.type}</p>
-          <p><strong>Damage Bonus:</strong> {selectedGun.addedDamage}</p>
-          {selectedGun.elemental && (
-            <p><strong>Element:</strong> {selectedGun.elementType}</p>
-          )}
-        </GunDisplay>
-      )}
-    </div>
-  )
+        // Select random rarity
+        const randomRarityRow = gunRarities[Math.floor(Math.random() * gunRarities.length)]
+        const randomRarityInfo = randomRarityRow[Math.floor(Math.random() * randomRarityRow.length)]
+
+        // Get elemental outcome based on the rarity
+        const elementalOutcome = randomRarityInfo.elemental
+            ? getRandomElementalOutcome(randomRarityInfo.rarity)
+            : { damageType: damageTypes.KINETIC, addedDamage: "0" }
+
+        setSelectedGun({
+            ...randomGun,
+            rarity: randomRarityInfo.rarity,
+            damageType: elementalOutcome.damageType,
+            addedDamage: elementalOutcome.addedDamage
+        })
+    }
+
+    return (
+        <div>
+            <Button onClick={generateRandomGun}>Generate Random Gun</Button>
+            {selectedGun && (
+                <GunDisplay>
+                    <p><strong>Rarity:</strong> {selectedGun.rarity}</p>
+                    <p><strong>Manufacturer:</strong> {selectedGun.manufacturer}</p>
+                    <p><strong>Type:</strong> {selectedGun.type}</p>
+                    <p><strong>Damage Type:</strong> {selectedGun.damageType}</p>
+                    <p><strong>Damage Bonus:</strong> {selectedGun.addedDamage}</p>
+                </GunDisplay>
+            )}
+        </div>
+    )
 }

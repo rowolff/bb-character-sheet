@@ -6,4 +6,5 @@ export const damageTypes = {
     SHOCK: 'Shock',
     RADIATION: 'Radiation', 
     CRYO: 'Cryo',
-}
+} as const;
+export type DamageType = (typeof damageTypes)[keyof typeof damageTypes];
