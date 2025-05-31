@@ -10,6 +10,7 @@ import { attributeItems } from './data/attributeItems'
 import { archetypes } from './data/archetypes'
 import { classes } from './data/classes'
 import { CreateGun } from './components/CreateGun'
+import { Loot } from './components/Loot'
 
 const MAX_USER_STAT_POINTS = 3
 
@@ -191,6 +192,9 @@ const App = () => {
       <GlobalStyle />
       <Group>
         <CreateGun />
+      </Group>
+      <Group>
+        <Loot />
       </Group>
       <Group>
         <h1>Character Builder</h1>
