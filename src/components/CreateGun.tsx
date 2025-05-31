@@ -283,7 +283,7 @@ export const CreateGun: React.FC = () => {
                             {selectedGun.addedDamage !== '0' && (
                                 <li style={{ marginBottom: '5px' }}>adds {selectedGun.addedDamage} {selectedGun.damageTypes.join(" and ")} damage (element roll)</li>
                             )}
-                            {selectedGun.bonus && (<li>{selectedGun.bonus} (weapon type)</li>)}
+                            {selectedGun.bonus && (<li style={{ marginBottom: '5px' }}>{selectedGun.bonus} (weapon type)</li>)}
                             <li style={{ marginBottom: '5px' }}>{selectedGun.manufacturer.gunInfo} (manufacturer)</li>
                             <li style={{ marginBottom: '5px' }}>{selectedGun.manufacturer.stats[selectedGun.rarity as keyof typeof selectedGun.manufacturer.stats]} (manufacturer)</li>
                             {selectedGun.prefix && (
