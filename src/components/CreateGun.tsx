@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { gunTable, GunType, gunRarities, getGunStatsByLevel, gt, prefixes, redText } from '../data/guntable'
-import { elementalRules, Manufacturer } from '../data/manufacturers'
+import { elementalRules, Manufacturer, manufacturers } from '../data/manufacturers'
 import { Rarity, rarities } from '../data/rarities'
 import { getRandomElementalOutcome } from '../data/elemental_table'
 import styled from 'styled-components'
@@ -104,21 +104,24 @@ export const CreateGun: React.FC = () => {
 
         let elementalOutcome: { damageTypes: DamageType[], addedDamage: string } = { damageTypes: [damageTypes.KINETIC], addedDamage: "0" }
 
-        // Get elemental outcome based on manufacturer rules and the rarity
-        switch (randomGun.manufacturer.elemental) {
-            case elementalRules.ALWAYS:
-                while (elementalOutcome.damageTypes.includes(damageTypes.KINETIC)) {
+        // Get elemental outcome based on gun roll, manufacturer rules and the rarity
+        if (randomRarityInfo.elemental && randomGun.manufacturer !== manufacturers.MALEFACTOR) {
+            switch (randomGun.manufacturer.elemental) {
+                case elementalRules.ALWAYS:
+                    while (elementalOutcome.damageTypes.includes(damageTypes.KINETIC)) {
+                        elementalOutcome = getRandomElementalOutcome(randomRarityInfo.rarity, randomGun.manufacturer.elementalBonuses[randomRarityInfo.rarity])
+                    }
+                    break;
+                case elementalRules.NORMAL:
                     elementalOutcome = getRandomElementalOutcome(randomRarityInfo.rarity, randomGun.manufacturer.elementalBonuses[randomRarityInfo.rarity])
-                }
-                break;
-            case elementalRules.NORMAL:
-                elementalOutcome = getRandomElementalOutcome(randomRarityInfo.rarity, randomGun.manufacturer.elementalBonuses[randomRarityInfo.rarity])
-                break;
-            case elementalRules.NEVER:
-                break;
-            default:
-                break;
+                    break;
+                case elementalRules.NEVER:
+                    break;
+                default:
+                    break;
+            }
         }
+
         // Create base gun
         const baseGun: RandomGun = {
             type: randomGun.type,
