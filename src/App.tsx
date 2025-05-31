@@ -189,6 +189,12 @@ const App = () => {
   return (
     <React.Fragment>
       <GlobalStyle />
+      <Group>
+        <CreateGun />
+      </Group>
+      <Group>
+        <h1>Character Builder</h1>
+      </Group>
       <AttributeBox
         labels={attributeItems}
         values={character.stats}
@@ -233,9 +239,7 @@ const App = () => {
         <StatOverview group="Background" stats={backgroundStats} />
       </Group>
 
-      <Group>
-        <CreateGun />
-      </Group>
+
     </React.Fragment>
   )
 }
