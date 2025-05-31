@@ -46,6 +46,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
 `;
 
 const LootDisplay = styled.div`
@@ -53,8 +54,7 @@ const LootDisplay = styled.div`
   padding: 15px;
   background-color: #212163;
   border-radius: 4px;
-  width: 33%;
-  min-width: 350px;
+  width: 100%; /* Take up full width of container */
   min-height: 100px;
   box-sizing: border-box;
 `;

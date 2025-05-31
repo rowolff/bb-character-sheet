@@ -28,6 +28,19 @@ const Group = styled.div`
   align-items: center;
 `
 
+const Row = styled.div`
+  display: flex;
+  width: 100%;
+  gap: 20px;
+  margin-bottom: 20px;
+`
+
+const Column = styled.div`
+  flex: 1;
+  min-width: 0; // Prevents flex items from overflowing
+  width: 50%;
+`
+
 const initialStats = {
   archetype: 'none',
   charClass: 'none',
@@ -191,17 +204,16 @@ const App = () => {
     <React.Fragment>
       <GlobalStyle />
       <Group>
-        <h1>Guns</h1>
+        <h1>Loot & Guns</h1>
       </Group>
-      <Group>
-        <CreateGun />
-      </Group>
-      <Group>
-        <h1>Loot</h1>
-      </Group>
-      <Group>
-        <Loot />
-      </Group>
+      <Row>
+        <Column>
+          <Loot />
+        </Column>
+        <Column>
+          <CreateGun />
+        </Column>
+      </Row>
       <Group>
         <h1>Character Builder</h1>
       </Group>

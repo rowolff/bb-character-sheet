@@ -35,8 +35,7 @@ const GunDisplay = styled.div<{ rarity?: string }>`
   padding: 15px;
   background-color: ${props => props.rarity ? rarityColors[props.rarity as keyof typeof rarityColors] || '#212163' : '#212163'};
   border-radius: 4px;
-  width: 33%;
-  min-width: 350px; /* Ensure it doesn't get too small on narrow screens */
+  width: 100%; /* Take up full width of container */
   box-sizing: border-box;
   transition: background-color 0.3s ease;
 `
@@ -71,6 +70,7 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  width: 100%;
 `
 
 interface RandomGun {
