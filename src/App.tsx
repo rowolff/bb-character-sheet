@@ -191,7 +191,13 @@ const App = () => {
     <React.Fragment>
       <GlobalStyle />
       <Group>
+        <h1>Guns</h1>
+      </Group>
+      <Group>
         <CreateGun />
+      </Group>
+      <Group>
+        <h1>Loot</h1>
       </Group>
       <Group>
         <Loot />
