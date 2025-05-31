@@ -1,3 +1,4 @@
+// filepath: /Users/robertwolff/Projects/bb-character-sheet/src/components/CreateGun.tsx
 import React, { useState, useEffect } from 'react'
 import { gunTable, GunType, gunRarities, getGunStatsByLevel, gt, prefixes, redText } from '../data/guntable'
 import { elementalRules, Manufacturer, manufacturers } from '../data/manufacturers'
@@ -131,14 +132,29 @@ interface RandomGun {
 export const CreateGun: React.FC = () => {
     const [selectedGun, setSelectedGun] = useState<RandomGun | null>(null)
     const [selectedLevel, setSelectedLevel] = useState<number>(1)
-    const [playLegendarySound, setPlayLegendarySound] = useState<boolean>(false)
-    const [playRareSound, setPlayRareSound] = useState<boolean>(false)
-    const [playEpicSound, setPlayEpicSound] = useState<boolean>(false)
 
-    // URLs for sounds
-    const legendarySoundUrl = "https://www.dropbox.com/s/7cdamczfwy1ud3o/legendarydrop.mp3?dl=1" // Changed dl=0 to dl=1 to make it directly downloadable
-    const rareSoundUrl = "https://www.filterblade.xyz/assets/sounds/AlertSound11.mp3"
-    const epicSoundUrl = "https://www.filterblade.xyz/assets/sounds/AlertSound8.mp3"
+    // Define sound configuration structure with all sounds in one state object
+    type SoundState = {
+        [key: string]: {
+            url: string;
+            play: boolean;
+        }
+    }
+
+    const [sounds, setSounds] = useState<SoundState>({
+        legendary: {
+            url: "https://www.dropbox.com/s/7cdamczfwy1ud3o/legendarydrop.mp3?dl=1",
+            play: false
+        },
+        rare: {
+            url: "https://www.filterblade.xyz/assets/sounds/AlertSound11.mp3",
+            play: false
+        },
+        epic: {
+            url: "https://www.filterblade.xyz/assets/sounds/AlertSound8.mp3",
+            play: false
+        }
+    })
 
     // Create an array of levels from 1 to 30
     const levels = Array.from({ length: 30 }, (_, i) => i + 1)
@@ -223,52 +239,62 @@ export const CreateGun: React.FC = () => {
 
         setSelectedGun(baseGun)
 
-        // Trigger appropriate sounds based on rarity
-        if (randomRarityInfo.rarity === rarities.LEGENDARY) {
-            setPlayLegendarySound(true)
-            setPlayRareSound(false)
-            setPlayEpicSound(false)
-        } else if (randomRarityInfo.rarity === rarities.RARE) {
-            setPlayRareSound(true)
-            setPlayLegendarySound(false)
-            setPlayEpicSound(false)
-        } else if (randomRarityInfo.rarity === rarities.EPIC) {
-            setPlayEpicSound(true)
-            setPlayLegendarySound(false)
-            setPlayRareSound(false)
-        } else {
-            setPlayLegendarySound(false)
-            setPlayRareSound(false)
-            setPlayEpicSound(false)
-        }
+        // Update all sounds at once based on rarity
+        const newSounds: SoundState = {
+            legendary: {
+                url: sounds.legendary.url,
+                play: randomRarityInfo.rarity === rarities.LEGENDARY
+            },
+            rare: {
+                url: sounds.rare.url,
+                play: randomRarityInfo.rarity === rarities.RARE
+            },
+            epic: {
+                url: sounds.epic.url,
+                play: randomRarityInfo.rarity === rarities.EPIC
+            }
+        };
+
+        setSounds(newSounds);
     }
 
-    // Reset play state after sound has been triggered
+    // Reset all sound play states after they've been triggered with a single effect
     useEffect(() => {
-        if (playLegendarySound) {
-            // Reset the play state after a short delay to allow for replaying if another legendary is generated
-            const timer = setTimeout(() => setPlayLegendarySound(false), 2000)
-            return () => clearTimeout(timer)
-        }
-    }, [playLegendarySound])
+        // Create an object to track which sounds need to be reset
+        const soundsToReset: { [key: string]: boolean } = {};
+        let needsReset = false;
 
-    // Reset rare sound play state after it's been triggered
-    useEffect(() => {
-        if (playRareSound) {
-            // Reset the play state after a short delay
-            const timer = setTimeout(() => setPlayRareSound(false), 2000)
-            return () => clearTimeout(timer)
+        // Check each sound to see if it's playing
+        Object.entries(sounds).forEach(([key, sound]) => {
+            if (sound.play) {
+                soundsToReset[key] = true;
+                needsReset = true;
+            }
+        });
+
+        // If any sounds are playing, set a timeout to reset them
+        if (needsReset) {
+            const timer = setTimeout(() => {
+                setSounds(prevSounds => {
+                    const newSounds = { ...prevSounds };
+
+                    // Reset only the sounds that were playing
+                    Object.keys(soundsToReset).forEach(key => {
+                        if (newSounds[key]) {
+                            newSounds[key] = {
+                                ...newSounds[key],
+                                play: false
+                            };
+                        }
+                    });
+
+                    return newSounds;
+                });
+            }, 2000);
+
+            return () => clearTimeout(timer);
         }
-    }, [playRareSound])
-    
-    // Reset epic sound play state after it's been triggered
-    useEffect(() => {
-        if (playEpicSound) {
-            // Reset the play state after a short delay
-            const timer = setTimeout(() => setPlayEpicSound(false), 2000)
-            return () => clearTimeout(timer)
-        }
-    }, [playEpicSound])
+    }, [sounds]);
 
     const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedLevel(Number(e.target.value))
@@ -276,10 +302,8 @@ export const CreateGun: React.FC = () => {
 
     return (
         <Container>
-            {/* AudioPlayers for sounds */}
-            <AudioPlayer url={legendarySoundUrl} play={playLegendarySound} />
-            <AudioPlayer url={rareSoundUrl} play={playRareSound} />
-            <AudioPlayer url={epicSoundUrl} play={playEpicSound} />
+            {/* Consolidated AudioPlayer for all sounds */}
+            <AudioPlayer sounds={sounds} />
 
             <Controls>
                 <div>

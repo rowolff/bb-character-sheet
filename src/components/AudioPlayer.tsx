@@ -1,25 +1,44 @@
 import React, { useEffect, useRef } from 'react';
 
 interface AudioPlayerProps {
-    url: string;
-    play: boolean;
+    sounds: {
+        [key: string]: {
+            url: string;
+            play: boolean;
+        }
+    };
 }
 
-const AudioPlayer: React.FC<AudioPlayerProps> = ({ url, play }) => {
-    const audioRef = useRef<HTMLAudioElement | null>(null);
+const AudioPlayer: React.FC<AudioPlayerProps> = ({ sounds }) => {
+    const audioRefs = useRef<{ [key: string]: HTMLAudioElement | null }>({});
 
     useEffect(() => {
-        if (play && audioRef.current) {
-            audioRef.current.currentTime = 0;
-            audioRef.current.play().catch(err => {
-                // Handle autoplay restrictions by logging the error
-                console.log("Audio playback failed:", err);
-            });
-        }
-    }, [play, url]);
+        // Check each sound and play if needed
+        Object.entries(sounds).forEach(([soundKey, soundData]) => {
+            if (soundData.play && audioRefs.current[soundKey]) {
+                const audioElement = audioRefs.current[soundKey];
+                if (audioElement) {
+                    audioElement.currentTime = 0;
+                    audioElement.play().catch(err => {
+                        console.log(`Audio playback failed for ${soundKey}:`, err);
+                    });
+                }
+            }
+        });
+    }, [sounds]);
 
     return (
-        <audio ref={audioRef} src={url} preload="auto" style={{ display: 'none' }} />
+        <>
+            {Object.entries(sounds).map(([soundKey, soundData]) => (
+                <audio
+                    key={soundKey}
+                    ref={el => audioRefs.current[soundKey] = el}
+                    src={soundData.url}
+                    preload="auto"
+                    style={{ display: 'none' }}
+                />
+            ))}
+        </>
     );
 };
 
