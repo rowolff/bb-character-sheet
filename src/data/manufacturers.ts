@@ -65,7 +65,7 @@ export const manufacturers = {
         gunInfo: 'Burst: Adds an additional Hit to each Attack. Increased Accuracy.'
     },
     BLACKPOWDER: {
-        name: 'Black Powder',
+        name: 'Blackpowder',
         stats: {
             [r.COMMON]: '+2 ACC Mod, +2 Crit Damage',
             [r.UNCOMMON]: '+2 ACC Mod, +3 Crit Damage',
