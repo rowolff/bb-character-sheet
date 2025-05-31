@@ -179,7 +179,7 @@ export const manufacturers = {
         gunInfo: 'Less Accuracy. Splash.'
     },
     CHOICE: {
-        name: 'Choice', elemental: elementalRules.NORMAL, stats: {}, gunInfo: 'Choose a favourite manufacturer.', elementalBonuses: {
+        name: 'any manufacturer', elemental: elementalRules.NORMAL, stats: {}, gunInfo: 'Choose a favourite manufacturer.', elementalBonuses: {
             [r.COMMON]: 0,
             [r.UNCOMMON]: 0,
             [r.RARE]: 0,

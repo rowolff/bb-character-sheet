@@ -222,7 +222,7 @@ export const gt = {
         Range: '4',
         Bonus: 'Splash'
     },
-    CHOICE: { name: 'Choice' },
+    CHOICE: { name: 'Weapon of your choosing' },
 } as const;
 export type GunType = (typeof gt)[keyof typeof gt];
 
@@ -323,4 +323,16 @@ export const gunRarities = [
     { rarity: rarities.LEGENDARY, elemental: true },
     { rarity: rarities.LEGENDARY, elemental: true },
     ],
+]
+
+export const prefixes = [
+    { name: 'One', effect: 'Can only be fired once per day. Deals 10x Damage.' },
+    { name: 'Normal', effect: 'Appearance of a Common gun.' },
+    { name: 'Adorable', effect: '25% chance to distract Enemies with baby animal hallucinations.' }
+]
+
+export const redText = [
+    { name: 'POP POP!', effect: 'Deals Crit Damage twice.' },
+    { name: 'I never freeze', effect: 'Adds Cryo Element type.' },
+    { name: 'Toasty!', effect: 'Adds Incendiary Element type.' }
 ]

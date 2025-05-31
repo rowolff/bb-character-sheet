@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import { gunTable, GunType, gunRarities, getGunStatsByLevel, gt } from '../data/guntable'
+import { gunTable, GunType, gunRarities, getGunStatsByLevel, gt, prefixes, redText } from '../data/guntable'
 import { elementalRules, Manufacturer } from '../data/manufacturers'
-import { Rarity } from '../data/rarities'
+import { Rarity, rarities } from '../data/rarities'
 import { getRandomElementalOutcome } from '../data/elemental_table'
 import styled from 'styled-components'
 import { DamageType, damageTypes } from '../data/damage_types'
@@ -72,6 +72,8 @@ interface RandomGun {
     stats?: any; // Using any for simplicity, could define a more specific type
     range?: string;
     bonus?: string;
+    prefix?: { name: string; effect: string; };
+    redText?: { name: string; effect: string; };
 }
 
 export const CreateGun: React.FC = () => {
@@ -117,13 +119,26 @@ export const CreateGun: React.FC = () => {
             level: selectedLevel,
         }
 
+        // Add a prefix for Epic or Legendary rarities
+        if (randomRarityInfo.rarity === rarities.EPIC || randomRarityInfo.rarity === rarities.LEGENDARY) {
+            const randomPrefix = prefixes[Math.floor(Math.random() * prefixes.length)]
+            baseGun.prefix = randomPrefix
+        }
+
+        // Add red text for Legendary rarity (100% chance) or Rare rarity (5% chance)
+        if (randomRarityInfo.rarity === rarities.LEGENDARY ||
+            (randomRarityInfo.rarity === rarities.RARE && Math.random() < 0.05)) {
+            const randomRedText = redText[Math.floor(Math.random() * redText.length)]
+            baseGun.redText = randomRedText
+        }
+
         // Try to get gun stats based on level
         try {
             // Extract the name property from the gun type
             const typeName = randomGun.type.name;
 
             // Skip processing for "Choice" type or if type name is missing
-            if (typeName && typeName !== 'Choice') {
+            if (typeName && typeName !== 'Weapon of your choosing') {
                 // Find the matching key in gt object by comparing the name values
                 const gunTypeKey = Object.keys(gt).find(key =>
                     gt[key as keyof typeof gt].name === typeName
@@ -172,17 +187,26 @@ export const CreateGun: React.FC = () => {
 
             {selectedGun && (
                 <GunDisplay>
+                    <p style={{
+                        fontSize: '18px',
+                        marginTop: '5px',
+                        marginBottom: '15px',
+                        textAlign: 'center',
+                        padding: '5px 0',
+                        borderBottom: '1px solid #3a2e8a'
+                    }}>
+                        <strong>
+                            {selectedGun.prefix ? `${selectedGun.prefix.name} ${selectedGun.rarity}` : selectedGun.rarity}{' '}
+                            {selectedGun.manufacturer.name}{' '}
+                            {selectedGun.type.name}
+                        </strong>
+                    </p>
                     <p><strong>Level:</strong> {selectedGun.level}</p>
-                    <p><strong>Rarity:</strong> {selectedGun.rarity}</p>
-                    <p><strong>Manufacturer:</strong> {selectedGun.manufacturer.name}</p>
-                    <p><strong>Type:</strong> {selectedGun.type.name}</p>
                     <p><strong>Damage Type:</strong> {selectedGun.damageTypes.join(" + ")}</p>
-                    <p><strong>Damage Bonus:</strong> {selectedGun.addedDamage}</p>
                     {selectedGun.stats && (
                         <>
                             <p><strong>Base Damage:</strong> {selectedGun.stats.Damage}</p>
                             {selectedGun.range && <p><strong>Range:</strong> {selectedGun.range}</p>}
-                            {selectedGun.bonus && <p><strong>Weapon Bonus:</strong> {selectedGun.bonus}</p>}
 
                             <div style={{ marginTop: '10px', marginBottom: '10px' }}>
                                 <p><strong>Stats:</strong></p>
@@ -216,16 +240,32 @@ export const CreateGun: React.FC = () => {
                         </>
                     )}
 
-                    {/* Manufacturer Info Section */}
+                    {/* Additional Effects Section */}
                     <div style={{ marginTop: '15px', borderTop: '1px solid #3a2e8a', paddingTop: '10px' }}>
-                        <p><strong>Manufacturer Details</strong></p>
-                        <p style={{ fontSize: '14px', marginTop: '5px' }}>
-                            <strong>Effect ({selectedGun.rarity}):</strong> {selectedGun.manufacturer.stats[selectedGun.rarity as keyof typeof selectedGun.manufacturer.stats]}
-                        </p>
-                        <p style={{ fontSize: '14px', marginTop: '5px' }}>
-                            <strong>Info:</strong> {selectedGun.manufacturer.gunInfo}
-                        </p>
+                        <ul style={{ fontSize: '14px', marginTop: '5px', paddingLeft: '20px' }}>
+                            {selectedGun.addedDamage !== '0' && (
+                                <li>adds {selectedGun.addedDamage} {selectedGun.damageTypes.join(" and ")} damage (element roll)</li>
+                            )}
+                            {selectedGun.bonus && (<li>{selectedGun.bonus} (weapon type)</li>)}
+                            <li>{selectedGun.manufacturer.gunInfo} (manufacturer)</li>
+                            <li>{selectedGun.manufacturer.stats[selectedGun.rarity as keyof typeof selectedGun.manufacturer.stats]} (manufacturer)</li>
+                            {selectedGun.prefix && (
+                                <li style={{ marginBottom: '5px' }}>
+                                    {selectedGun.prefix.effect}
+                                </li>
+                            )}
+                            {selectedGun.redText && (
+                                <li style={{ marginBottom: '5px' }}>
+                                    {selectedGun.redText.effect}
+                                </li>
+                            )}
+                        </ul>
                     </div>
+                    {selectedGun.redText && (<div style={{ marginTop: '15px', borderTop: '1px solid #3a2e8a', paddingTop: '10px' }}>
+
+                        <p style={{ color: '#ff3333' }}><strong>"{selectedGun.redText.name}"</strong></p>
+
+                    </div>)}
                 </GunDisplay>
             )}
         </Container>
