@@ -1,12 +1,12 @@
 {
   "files": {
-    "main.js": "/bb-character-sheet/static/js/main.eb524a12.js",
+    "main.js": "/bb-character-sheet/static/js/main.dcbb50e1.js",
     "static/js/787.3963be41.chunk.js": "/bb-character-sheet/static/js/787.3963be41.chunk.js",
     "index.html": "/bb-character-sheet/index.html",
-    "main.eb524a12.js.map": "/bb-character-sheet/static/js/main.eb524a12.js.map",
+    "main.dcbb50e1.js.map": "/bb-character-sheet/static/js/main.dcbb50e1.js.map",
     "787.3963be41.chunk.js.map": "/bb-character-sheet/static/js/787.3963be41.chunk.js.map"
   },
   "entrypoints": [
-    "static/js/main.eb524a12.js"
+    "static/js/main.dcbb50e1.js"
   ]
 }
