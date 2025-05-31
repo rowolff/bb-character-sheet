@@ -456,7 +456,7 @@ export const redText = [
     { name: 'Never Fight a Knight with a Perm', effect: 'DMG Mod +6 against non-human Enemies.' },
     { name: 'Bye bye, little Butt Stallion!', effect: 'Shots explode into rainbows that deal an extra 1d8 Damage.' },
     { name: 'Time 2 Hack', effect: '+4 on Interact Checks and Melee Damage while equipped.' },
-    { name: 'HATE Magic... so much', effect: '+3 DMG Mod. Take 2d6 Vomit Damage if Reloaded.' },
+    { name: 'I HATE Magic... so much', effect: '+3 DMG Mod. Take 2d6 Vomit Damage if Reloaded.' },
     { name: 'OFF WITH THEIR HEADS!', effect: 'Roll %s. 95%+: the Enemy\'s head falls off.' },
     { name: 'This is my BOOMSTICK!', effect: 'Deals 3x Damage to skeletons.' },
     { name: 'Super easy, barely an inconvenience', effect: 'Automatically pass the first Check each day.' },
