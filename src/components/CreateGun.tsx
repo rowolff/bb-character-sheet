@@ -110,7 +110,7 @@ export const CreateGun: React.FC = () => {
         let elementalOutcome: { damageTypes: DamageType[], addedDamage: string } = { damageTypes: [damageTypes.KINETIC], addedDamage: "0" }
 
         // Get elemental outcome based on gun roll, manufacturer rules and the rarity
-        if (randomRarityInfo.elemental && randomGun.manufacturer !== manufacturers.MALEFACTOR) {
+        if (randomRarityInfo.elemental || randomGun.manufacturer === manufacturers.MALEFACTOR) {
             switch (randomGun.manufacturer.elemental) {
                 case elementalRules.ALWAYS:
                     while (elementalOutcome.damageTypes.includes(damageTypes.KINETIC)) {
