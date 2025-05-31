@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { gunTable, GunType, gunRarities, getGunStatsByLevel, gt, prefixes, redText } from '../data/guntable'
 import { elementalRules, Manufacturer, manufacturers } from '../data/manufacturers'
 import { Rarity, rarities } from '../data/rarities'
+import AudioPlayer from './AudioPlayer'
 import { getRandomElementalOutcome } from '../data/elemental_table'
 import styled from 'styled-components'
 import { DamageType, damageTypes } from '../data/damage_types'
@@ -89,6 +90,10 @@ interface RandomGun {
 export const CreateGun: React.FC = () => {
     const [selectedGun, setSelectedGun] = useState<RandomGun | null>(null)
     const [selectedLevel, setSelectedLevel] = useState<number>(1)
+    const [playLegendarySound, setPlayLegendarySound] = useState<boolean>(false)
+
+    // URL for the legendary sound
+    const legendarySoundUrl = "https://www.dropbox.com/s/7cdamczfwy1ud3o/legendarydrop.mp3?dl=1" // Changed dl=0 to dl=1 to make it directly downloadable
 
     // Create an array of levels from 1 to 30
     const levels = Array.from({ length: 30 }, (_, i) => i + 1)
@@ -172,7 +177,23 @@ export const CreateGun: React.FC = () => {
         }
 
         setSelectedGun(baseGun)
+
+        // Trigger legendary sound if a legendary gun is generated
+        if (randomRarityInfo.rarity === rarities.LEGENDARY) {
+            setPlayLegendarySound(true)
+        } else {
+            setPlayLegendarySound(false)
+        }
     }
+
+    // Reset play state after sound has been triggered
+    useEffect(() => {
+        if (playLegendarySound) {
+            // Reset the play state after a short delay to allow for replaying if another legendary is generated
+            const timer = setTimeout(() => setPlayLegendarySound(false), 2000)
+            return () => clearTimeout(timer)
+        }
+    }, [playLegendarySound])
 
     const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedLevel(Number(e.target.value))
@@ -180,6 +201,9 @@ export const CreateGun: React.FC = () => {
 
     return (
         <Container>
+            {/* AudioPlayer for legendary sound */}
+            <AudioPlayer url={legendarySoundUrl} play={playLegendarySound} />
+
             <Controls>
                 <div>
                     <Label htmlFor="level-select">Level:</Label>
