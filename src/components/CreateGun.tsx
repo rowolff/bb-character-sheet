@@ -25,6 +25,9 @@ const GunDisplay = styled.div`
   padding: 15px;
   background-color: #212163;
   border-radius: 4px;
+  width: 33%;
+  min-width: 350px; /* Ensure it doesn't get too small on narrow screens */
+  box-sizing: border-box;
 `
 
 const Controls = styled.div`
@@ -51,6 +54,12 @@ const Select = styled.select`
 const Label = styled.label`
   margin-right: 5px;
   font-weight: 600;
+`
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 `
 
 interface RandomGun {
@@ -142,7 +151,7 @@ export const CreateGun: React.FC = () => {
     }
 
     return (
-        <div>
+        <Container>
             <Controls>
                 <div>
                     <Label htmlFor="level-select">Level:</Label>
@@ -214,11 +223,11 @@ export const CreateGun: React.FC = () => {
                             <strong>Effect ({selectedGun.rarity}):</strong> {selectedGun.manufacturer.stats[selectedGun.rarity as keyof typeof selectedGun.manufacturer.stats]}
                         </p>
                         <p style={{ fontSize: '14px', marginTop: '5px' }}>
-                            <strong>Gun Info:</strong> {selectedGun.manufacturer.gunInfo}
+                            <strong>Info:</strong> {selectedGun.manufacturer.gunInfo}
                         </p>
                     </div>
                 </GunDisplay>
             )}
-        </div>
+        </Container>
     )
 }
