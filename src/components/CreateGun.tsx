@@ -4,7 +4,7 @@ import { elementalRules, Manufacturer, manufacturers } from '../data/manufacture
 import { Rarity, rarities } from '../data/rarities'
 import AudioPlayer from './AudioPlayer'
 import { getRandomElementalOutcome } from '../data/elemental_table'
-import styled from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
 import { DamageType, damageTypes } from '../data/damage_types'
 
 const Button = styled.button`
@@ -30,7 +30,34 @@ const rarityColors = {
     LEGENDARY: '#c06000', // Orange
 }
 
-const GunDisplay = styled.div<{ rarity?: string }>`
+// Keyframes for border animations
+const flashAnimation = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+  50% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 1); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
+`;
+
+const pulseAnimation = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(255, 220, 180, 0.5); }
+  50% { box-shadow: 0 0 0 4px rgba(255, 220, 180, 0.5); }
+  100% { box-shadow: 0 0 0 0 rgba(255, 220, 180, 0.5); }
+`;
+
+// Flash animation for Rare rarity (light blue)
+const rareFlashAnimation = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(100, 180, 255, 0); }
+  50% { box-shadow: 0 0 0 8px rgba(100, 180, 255, 0.7); }
+  100% { box-shadow: 0 0 0 0 rgba(100, 180, 255, 0); }
+`;
+
+// Flash animation for Epic rarity (light purple)
+const epicFlashAnimation = keyframes`
+  0% { box-shadow: 0 0 0 0 rgba(200, 120, 255, 0); }
+  50% { box-shadow: 0 0 0 10px rgba(200, 120, 255, 0.7); }
+  100% { box-shadow: 0 0 0 0 rgba(200, 120, 255, 0); }
+`;
+
+const GunDisplay = styled.div<{ rarity?: string; isLegendary?: boolean; isEpic?: boolean; isRare?: boolean }>`
   margin-top: 10px;
   padding: 15px;
   background-color: ${props => props.rarity ? rarityColors[props.rarity as keyof typeof rarityColors] || '#212163' : '#212163'};
@@ -38,6 +65,20 @@ const GunDisplay = styled.div<{ rarity?: string }>`
   width: 100%; /* Take up full width of container */
   box-sizing: border-box;
   transition: background-color 0.3s ease;
+  position: relative;
+  
+  ${props => props.isLegendary && css`
+    animation: ${flashAnimation} 0.6s ease-out,
+               ${pulseAnimation} 2s infinite ease-in-out 0.7s;
+  `}
+  
+  ${props => props.isEpic && css`
+    animation: ${epicFlashAnimation} 0.5s ease-out;
+  `}
+  
+  ${props => props.isRare && css`
+    animation: ${rareFlashAnimation} 0.5s ease-out;
+  `}
 `
 
 const Controls = styled.div`
@@ -91,9 +132,13 @@ export const CreateGun: React.FC = () => {
     const [selectedGun, setSelectedGun] = useState<RandomGun | null>(null)
     const [selectedLevel, setSelectedLevel] = useState<number>(1)
     const [playLegendarySound, setPlayLegendarySound] = useState<boolean>(false)
+    const [playRareSound, setPlayRareSound] = useState<boolean>(false)
+    const [playEpicSound, setPlayEpicSound] = useState<boolean>(false)
 
-    // URL for the legendary sound
+    // URLs for sounds
     const legendarySoundUrl = "https://www.dropbox.com/s/7cdamczfwy1ud3o/legendarydrop.mp3?dl=1" // Changed dl=0 to dl=1 to make it directly downloadable
+    const rareSoundUrl = "https://www.filterblade.xyz/assets/sounds/AlertSound11.mp3"
+    const epicSoundUrl = "https://www.filterblade.xyz/assets/sounds/AlertSound8.mp3"
 
     // Create an array of levels from 1 to 30
     const levels = Array.from({ length: 30 }, (_, i) => i + 1)
@@ -178,11 +223,23 @@ export const CreateGun: React.FC = () => {
 
         setSelectedGun(baseGun)
 
-        // Trigger legendary sound if a legendary gun is generated
+        // Trigger appropriate sounds based on rarity
         if (randomRarityInfo.rarity === rarities.LEGENDARY) {
             setPlayLegendarySound(true)
+            setPlayRareSound(false)
+            setPlayEpicSound(false)
+        } else if (randomRarityInfo.rarity === rarities.RARE) {
+            setPlayRareSound(true)
+            setPlayLegendarySound(false)
+            setPlayEpicSound(false)
+        } else if (randomRarityInfo.rarity === rarities.EPIC) {
+            setPlayEpicSound(true)
+            setPlayLegendarySound(false)
+            setPlayRareSound(false)
         } else {
             setPlayLegendarySound(false)
+            setPlayRareSound(false)
+            setPlayEpicSound(false)
         }
     }
 
@@ -195,14 +252,34 @@ export const CreateGun: React.FC = () => {
         }
     }, [playLegendarySound])
 
+    // Reset rare sound play state after it's been triggered
+    useEffect(() => {
+        if (playRareSound) {
+            // Reset the play state after a short delay
+            const timer = setTimeout(() => setPlayRareSound(false), 2000)
+            return () => clearTimeout(timer)
+        }
+    }, [playRareSound])
+    
+    // Reset epic sound play state after it's been triggered
+    useEffect(() => {
+        if (playEpicSound) {
+            // Reset the play state after a short delay
+            const timer = setTimeout(() => setPlayEpicSound(false), 2000)
+            return () => clearTimeout(timer)
+        }
+    }, [playEpicSound])
+
     const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedLevel(Number(e.target.value))
     }
 
     return (
         <Container>
-            {/* AudioPlayer for legendary sound */}
+            {/* AudioPlayers for sounds */}
             <AudioPlayer url={legendarySoundUrl} play={playLegendarySound} />
+            <AudioPlayer url={rareSoundUrl} play={playRareSound} />
+            <AudioPlayer url={epicSoundUrl} play={playEpicSound} />
 
             <Controls>
                 <div>
@@ -223,7 +300,12 @@ export const CreateGun: React.FC = () => {
             </Controls>
 
             {selectedGun && (
-                <GunDisplay rarity={selectedGun.rarity.toUpperCase()}>
+                <GunDisplay
+                    rarity={selectedGun.rarity.toUpperCase()}
+                    isLegendary={selectedGun.rarity === rarities.LEGENDARY}
+                    isEpic={selectedGun.rarity === rarities.EPIC}
+                    isRare={selectedGun.rarity === rarities.RARE}
+                >
                     <p style={{
                         fontSize: '18px',
                         marginTop: '5px',
