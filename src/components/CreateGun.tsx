@@ -20,14 +20,24 @@ const Button = styled.button`
   }
 `
 
-const GunDisplay = styled.div`
+// Define background colors for different rarities
+const rarityColors = {
+    COMMON: '#333333',    // Dark grey
+    UNCOMMON: '#1e441e',  // Dark green
+    RARE: '#1a3a5a',      // Light blue
+    EPIC: '#3a1e5a',      // Purple
+    LEGENDARY: '#c06000', // Orange
+}
+
+const GunDisplay = styled.div<{ rarity?: string }>`
   margin-top: 10px;
   padding: 15px;
-  background-color: #212163;
+  background-color: ${props => props.rarity ? rarityColors[props.rarity as keyof typeof rarityColors] || '#212163' : '#212163'};
   border-radius: 4px;
   width: 33%;
   min-width: 350px; /* Ensure it doesn't get too small on narrow screens */
   box-sizing: border-box;
+  transition: background-color 0.3s ease;
 `
 
 const Controls = styled.div`
@@ -186,14 +196,14 @@ export const CreateGun: React.FC = () => {
             </Controls>
 
             {selectedGun && (
-                <GunDisplay>
+                <GunDisplay rarity={selectedGun.rarity.toUpperCase()}>
                     <p style={{
                         fontSize: '18px',
                         marginTop: '5px',
                         marginBottom: '15px',
                         textAlign: 'center',
                         padding: '5px 0',
-                        borderBottom: '1px solid #3a2e8a'
+                        borderBottom: '1px solid rgb(131, 131, 131)'
                     }}>
                         <strong>
                             {selectedGun.prefix ? `${selectedGun.prefix.name} ${selectedGun.rarity}` : selectedGun.rarity}{' '}
@@ -213,9 +223,9 @@ export const CreateGun: React.FC = () => {
                                 <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '5px' }}>
                                     <thead>
                                         <tr>
-                                            <th style={{ textAlign: 'left', padding: '3px 5px', borderBottom: '1px solid #3a2e8a' }}>Roll</th>
-                                            <th style={{ textAlign: 'center', padding: '3px 5px', borderBottom: '1px solid #3a2e8a' }}>Hits</th>
-                                            <th style={{ textAlign: 'center', padding: '3px 5px', borderBottom: '1px solid #3a2e8a' }}>Crits</th>
+                                            <th style={{ textAlign: 'left', padding: '3px 5px', borderBottom: '1px solid rgb(131, 131, 131)' }}>Roll</th>
+                                            <th style={{ textAlign: 'center', padding: '3px 5px', borderBottom: '1px solid rgb(131, 131, 131)' }}>Hits</th>
+                                            <th style={{ textAlign: 'center', padding: '3px 5px', borderBottom: '1px solid rgb(131, 131, 131)' }}>Crits</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -241,7 +251,7 @@ export const CreateGun: React.FC = () => {
                     )}
 
                     {/* Additional Effects Section */}
-                    <div style={{ marginTop: '15px', borderTop: '1px solid #3a2e8a', paddingTop: '10px' }}>
+                    <div style={{ marginTop: '15px', borderTop: '1px solid rgb(131, 131, 131)', paddingTop: '10px' }}>
                         <ul style={{ fontSize: '14px', marginTop: '5px', paddingLeft: '20px' }}>
                             {selectedGun.addedDamage !== '0' && (
                                 <li>adds {selectedGun.addedDamage} {selectedGun.damageTypes.join(" and ")} damage (element roll)</li>
@@ -261,9 +271,9 @@ export const CreateGun: React.FC = () => {
                             )}
                         </ul>
                     </div>
-                    {selectedGun.redText && (<div style={{ marginTop: '15px', borderTop: '1px solid #3a2e8a', paddingTop: '10px' }}>
+                    {selectedGun.redText && (<div style={{ marginTop: '15px', borderTop: '1px solid rgb(131, 131, 131)', paddingTop: '10px' }}>
 
-                        <p style={{ color: '#ff3333' }}><strong>"{selectedGun.redText.name}"</strong></p>
+                        <p style={{ color: '#a31e1e' }}><strong>"{selectedGun.redText.name}"</strong></p>
 
                     </div>)}
                 </GunDisplay>
