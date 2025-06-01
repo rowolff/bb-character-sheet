@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { gunTable, GunType, gunRarities, getGunStatsByLevel, gt, prefixes, redText } from '../data/guntable'
 import { elementalRules, Manufacturer, manufacturers } from '../data/manufacturers'
 import { Rarity, rarities } from '../data/rarities'
+import { GUN_TYPES } from '../data/gunTypesEnum'
 import AudioPlayer from './AudioPlayer'
 import { getRandomElementalOutcome } from '../data/elemental_table'
 import styled, { keyframes, css } from 'styled-components'
@@ -136,11 +137,40 @@ interface RandomGun {
     redText?: { name: string; effect: string; };
 }
 
+// Helper function to check if a gun name matches a GUN_TYPES value
+const gunNameMatchesType = (gunName: string, gunTypeValue: string): boolean => {
+    return Object.values(GUN_TYPES).some(type => type === gunName && type === gunTypeValue);
+};
+
 export const CreateGun: React.FC = () => {
     const [selectedGun, setSelectedGun] = useState<RandomGun | null>(null)
     const [selectedLevel, setSelectedLevel] = useState<number>(1)
     const [selectedGunType, setSelectedGunType] = useState<string>("random")
     const [selectedRarity, setSelectedRarity] = useState<string>("random")
+    const [selectedManufacturer, setSelectedManufacturer] = useState<string>("random")
+
+    // Function to get available gun types for the selected manufacturer
+    const getAvailableGunTypes = () => {
+        if (selectedManufacturer === "random") {
+            // All gun types are available when manufacturer is random
+            return Object.keys(gt);
+        } else {
+            const manufacturerKey = selectedManufacturer as keyof typeof manufacturers;
+            const manufacturer = manufacturers[manufacturerKey];
+
+            // Check if the manufacturer has a builds property
+            if (manufacturer && 'builds' in manufacturer) {
+                // Return gun type keys that match the manufacturer's builds
+                return Object.keys(gt).filter(key => {
+                    const gunType = gt[key as keyof typeof gt];
+                    return manufacturer.builds?.some(build => gunNameMatchesType(gunType.name, build));
+                });
+            }
+
+            // Fallback to all gun types if no builds property
+            return Object.keys(gt);
+        }
+    };
 
     // Define sound configuration structure with all sounds in one state object
     type SoundState = {
@@ -171,42 +201,100 @@ export const CreateGun: React.FC = () => {
     const generateRandomGun = () => {
         // Select gun based on dropdown or random
         let randomGun: { type: GunType; manufacturer: Manufacturer };
-        
-        if (selectedGunType === "random") {
-            // Select a completely random gun
+        let gunType: GunType | null = null;
+        let manufacturer: Manufacturer | null = null;
+
+        // Determine gun type based on selection
+        if (selectedGunType !== "random") {
+            const gunTypeKey = selectedGunType as keyof typeof gt;
+            gunType = gt[gunTypeKey];
+        }
+
+        // Determine manufacturer based on selection
+        if (selectedManufacturer !== "random") {
+            const manufacturerKey = selectedManufacturer as keyof typeof manufacturers;
+            manufacturer = manufacturers[manufacturerKey];
+        }
+
+        // Handle all combinations of selections
+        if (gunType && manufacturer) {
+            // Both gun type and manufacturer specified
+            randomGun = { type: gunType, manufacturer: manufacturer };
+        } else if (gunType) {
+            // Only gun type specified, find matching manufacturers that can build this type
+            const matchingManufacturers: Manufacturer[] = [];
+
+            // Find manufacturers that can build this gun type
+            Object.values(manufacturers).forEach(mfr => {
+                if ('builds' in mfr && mfr.builds && mfr.builds.some(build => gunNameMatchesType(gunType!.name, build))) {
+                    matchingManufacturers.push(mfr);
+                }
+            });
+
+            if (matchingManufacturers.length > 0) {
+                // Pick a random manufacturer from those that can build this gun type
+                const randomManufacturer = matchingManufacturers[Math.floor(Math.random() * matchingManufacturers.length)];
+                randomGun = { type: gunType, manufacturer: randomManufacturer };
+            } else {
+                // Fallback to CHOICE manufacturer if no suitable manufacturers found
+                randomGun = { type: gunType, manufacturer: manufacturers.CHOICE };
+            }
+        } else if (manufacturer) {
+            // Only manufacturer specified, find matching guns and pick random type
+            const matchingGuns: { type: GunType; manufacturer: Manufacturer }[] = [];
+
+            // Check if this manufacturer has builds defined
+            if ('builds' in manufacturer && manufacturer.builds) {
+                // Use the builds property to find available gun types for this manufacturer
+                const availableBuilds = manufacturer.builds;
+
+                if (availableBuilds.length > 0) {
+                    // Pick a random gun type from the available builds
+                    const randomBuild = availableBuilds[Math.floor(Math.random() * availableBuilds.length)];
+                    // Find the matching gun type object
+                    const matchingGunType = Object.values(gt).find(gunType => gunNameMatchesType(gunType.name, randomBuild));
+                    if (matchingGunType) {
+                        randomGun = { type: matchingGunType, manufacturer: manufacturer };
+                    } else {
+                        // Fallback in case no match is found
+                        randomGun = { type: gt.CHOICE, manufacturer: manufacturer };
+                    }
+                } else {
+                    // Fallback to a random gun type if no builds defined
+                    const randomGunType = Object.values(gt).filter(g => g.name !== "Weapon of your choosing")[
+                        Math.floor(Math.random() * (Object.values(gt).length - 1))
+                    ];
+                    randomGun = { type: randomGunType as GunType, manufacturer: manufacturer };
+                }
+            } else {
+                // If no builds property, search for this manufacturer in the gun table
+                gunTable.forEach(row => {
+                    row.forEach(gun => {
+                        if (gun.manufacturer.name === manufacturer!.name) {
+                            matchingGuns.push(gun);
+                        }
+                    });
+                });
+
+                if (matchingGuns.length > 0) {
+                    randomGun = matchingGuns[Math.floor(Math.random() * matchingGuns.length)];
+                } else {
+                    // Fallback to a random gun type if no matching guns found
+                    const randomGunType = Object.values(gt).filter(g => g.name !== "Weapon of your choosing")[
+                        Math.floor(Math.random() * (Object.values(gt).length - 1))
+                    ];
+                    randomGun = { type: randomGunType as GunType, manufacturer: manufacturer };
+                }
+            }
+        } else {
+            // Both random, pick a completely random gun
             const randomRow = gunTable[Math.floor(Math.random() * gunTable.length)]
             randomGun = randomRow[Math.floor(Math.random() * randomRow.length)]
-        } else {
-            // Find guns of the selected type
-            const gunTypeKey = selectedGunType as keyof typeof gt;
-            const gunType = gt[gunTypeKey];
-            
-            // Find all guns of this type in the gun table
-            const matchingGuns: { type: GunType; manufacturer: Manufacturer }[] = [];
-            
-            gunTable.forEach(row => {
-                row.forEach(gun => {
-                    if (gun.type.name === gunType.name) {
-                        matchingGuns.push(gun);
-                    }
-                });
-            });
-            
-            // Select a random gun from the matching ones, or use choice if available
-            if (matchingGuns.length > 0) {
-                randomGun = matchingGuns[Math.floor(Math.random() * matchingGuns.length)];
-            } else {
-                // Fallback to a gun with choice manufacturer if no matching guns found
-                randomGun = { 
-                    type: gunType, 
-                    manufacturer: manufacturers.CHOICE 
-                };
-            }
         }
 
         // Select rarity based on dropdown or random
         let randomRarityInfo: { rarity: Rarity; elemental: boolean };
-        
+
         if (selectedRarity === "random") {
             // Select a completely random rarity
             const randomRarityRow = gunRarities[Math.floor(Math.random() * gunRarities.length)]
@@ -348,16 +436,42 @@ export const CreateGun: React.FC = () => {
         }
     }, [sounds]);
 
+    // Effect to reset gun type to "random" if it's not compatible with manufacturer
+    useEffect(() => {
+        if (selectedManufacturer !== "random" && selectedGunType !== "random") {
+            const availableGunTypes = getAvailableGunTypes();
+
+            if (!availableGunTypes.includes(selectedGunType)) {
+                setSelectedGunType("random");
+            }
+        }
+    }, [selectedManufacturer]);
+
     const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedLevel(Number(e.target.value))
     }
-    
+
     const handleGunTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedGunType(e.target.value)
     }
-    
+
     const handleRarityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedRarity(e.target.value)
+    }
+
+    const handleManufacturerChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const newManufacturer = e.target.value;
+        setSelectedManufacturer(newManufacturer);
+
+        // If the manufacturer is not random, check if the current gun type is valid for this manufacturer
+        if (newManufacturer !== "random" && selectedGunType !== "random") {
+            const availableGunTypes = getAvailableGunTypes();
+
+            // Reset gun type to random if current selection is not available for this manufacturer
+            if (!availableGunTypes.includes(selectedGunType)) {
+                setSelectedGunType("random");
+            }
+        }
     }
 
     return (
@@ -380,7 +494,7 @@ export const CreateGun: React.FC = () => {
                         ))}
                     </Select>
                 </SelectContainer>
-                
+
                 <SelectContainer>
                     <Label htmlFor="gun-type-select">Gun Type:</Label>
                     <Select
@@ -389,14 +503,27 @@ export const CreateGun: React.FC = () => {
                         onChange={handleGunTypeChange}
                     >
                         <option value="random">Random</option>
-                        {Object.entries(gt).map(([key, value]) => (
-                            <option key={key} value={key}>
-                                {value.name}
-                            </option>
-                        ))}
+                        {Object.entries(gt).map(([key, value]) => {
+                            // Skip the CHOICE gun type (if any)
+                            if (key === "CHOICE") return null;
+
+                            // Check if this gun type is available for the selected manufacturer
+                            const isAvailable = selectedManufacturer === "random" ||
+                                getAvailableGunTypes().includes(key);
+
+                            return (
+                                <option
+                                    key={key}
+                                    value={key}
+                                    disabled={!isAvailable}
+                                >
+                                    {value.name}{!isAvailable ? " (unavailable)" : ""}
+                                </option>
+                            );
+                        })}
                     </Select>
                 </SelectContainer>
-                
+
                 <SelectContainer>
                     <Label htmlFor="rarity-select">Rarity:</Label>
                     <Select
@@ -412,7 +539,25 @@ export const CreateGun: React.FC = () => {
                         ))}
                     </Select>
                 </SelectContainer>
-                
+
+                <SelectContainer>
+                    <Label htmlFor="manufacturer-select">Manufacturer:</Label>
+                    <Select
+                        id="manufacturer-select"
+                        value={selectedManufacturer}
+                        onChange={handleManufacturerChange}
+                    >
+                        <option value="random">Random</option>
+                        {Object.entries(manufacturers)
+                            .filter(([key, _]) => key !== "CHOICE") // Filter out the CHOICE manufacturer
+                            .map(([key, value]) => (
+                                <option key={key} value={key}>
+                                    {value.name}
+                                </option>
+                            ))}
+                    </Select>
+                </SelectContainer>
+
                 <Button onClick={generateRandomGun}>Generate Gun</Button>
             </Controls>
 

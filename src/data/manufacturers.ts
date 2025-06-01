@@ -1,4 +1,5 @@
 import { rarities as r } from './rarities';
+import { GUN_TYPES } from './gunTypesEnum';
 
 export const elementalRules = {
     NEVER: 'never',
@@ -24,7 +25,8 @@ export const manufacturers = {
             [r.EPIC]: 0,
             [r.LEGENDARY]: 0,
         },
-        gunInfo: 'Overheat: When taking a Reload Action, roll the dice value specified and take the result as Incendiary Damage. Increased Damage.'
+        gunInfo: 'Overheat: When taking a Reload Action, roll the dice value specified and take the result as Incendiary Damage. Increased Damage.',
+        builds: [GUN_TYPES.PISTOL, GUN_TYPES.SMG, GUN_TYPES.SHOTGUN, GUN_TYPES.SNIPER_RIFLE],
     },
     FERIORE: {
         name: 'Feriore',
@@ -43,7 +45,8 @@ export const manufacturers = {
             [r.EPIC]: 0,
             [r.LEGENDARY]: 0,
         },
-        gunInfo: 'Swap/Reload: When taking a Swap Gun or Reload action, the gun is Thrown and deals Damage like a grenade. Less Accuracy.'
+        gunInfo: 'Swap/Reload: When taking a Swap Gun or Reload action, the gun is Thrown and deals Damage like a grenade. Less Accuracy.',
+        builds: [GUN_TYPES.COMBAT_RIFLE, GUN_TYPES.PISTOL, GUN_TYPES.SHOTGUN, GUN_TYPES.SMG]
     },
     DAHLIA: {
         name: 'Dahlia',
@@ -62,7 +65,8 @@ export const manufacturers = {
             [r.EPIC]: 0,
             [r.LEGENDARY]: 0,
         },
-        gunInfo: 'Burst: Adds an additional Hit to each Attack. Increased Accuracy.'
+        gunInfo: 'Burst: Adds an additional Hit to each Attack. Increased Accuracy.',
+        builds: [GUN_TYPES.COMBAT_RIFLE, GUN_TYPES.PISTOL, GUN_TYPES.SMG, GUN_TYPES.SHOTGUN, GUN_TYPES.SNIPER_RIFLE]
     },
     BLACKPOWDER: {
         name: 'Blackpowder',
@@ -81,7 +85,8 @@ export const manufacturers = {
             [r.EPIC]: 0,
             [r.LEGENDARY]: 0,
         },
-        gunInfo: 'Increased Accuracy. Highly increased Crit Damage. Never deals Elemental Damage.'
+        gunInfo: 'Increased Accuracy. Highly increased Crit Damage. Never deals Elemental Damage.',
+        builds: [GUN_TYPES.PISTOL, GUN_TYPES.SHOTGUN, GUN_TYPES.SNIPER_RIFLE]
     },
     ALAS: {
         name: 'Alas!',
@@ -100,7 +105,8 @@ export const manufacturers = {
             [r.EPIC]: 0,
             [r.LEGENDARY]: 0,
         },
-        gunInfo: 'Increased Damage. Never deals Elemental Damage.'
+        gunInfo: 'Increased Damage. Never deals Elemental Damage.',
+        builds: [GUN_TYPES.COMBAT_RIFLE, GUN_TYPES.PISTOL, GUN_TYPES.SHOTGUN, GUN_TYPES.SNIPER_RIFLE]
     },
     MALEFACTOR: {
         name: 'Malefactor',
@@ -119,7 +125,8 @@ export const manufacturers = {
             [r.EPIC]: 15,
             [r.LEGENDARY]: 20,
         },
-        gunInfo: 'Always deals Elemental Damage. Reduced overall Damage at lower Rarities.'
+        gunInfo: 'Always deals Elemental Damage. Reduced overall Damage at lower Rarities.',
+        builds: [GUN_TYPES.PISTOL, GUN_TYPES.SMG, GUN_TYPES.SHOTGUN, GUN_TYPES.RPG]
     },
     STOKER: {
         name: 'Stoker',
@@ -138,7 +145,8 @@ export const manufacturers = {
             [r.EPIC]: 0,
             [r.LEGENDARY]: 0,
         },
-        gunInfo: 'Less Accuracy. Gain an Extra Attack Action.'
+        gunInfo: 'Less Accuracy. Gain an Extra Attack Action.',
+        builds: [GUN_TYPES.COMBAT_RIFLE, GUN_TYPES.PISTOL, GUN_TYPES.SHOTGUN, GUN_TYPES.SNIPER_RIFLE, GUN_TYPES.RPG]
     },
     HYPERIUS: {
         name: 'Hyperius',
@@ -157,7 +165,8 @@ export const manufacturers = {
             [r.EPIC]: 0,
             [r.LEGENDARY]: 0,
         },
-        gunInfo: 'Increased Accuracy. Reduced overall Damage.'
+        gunInfo: 'Increased Accuracy. Reduced overall Damage.',
+        builds: [GUN_TYPES.COMBAT_RIFLE, GUN_TYPES.PISTOL, GUN_TYPES.SMG, GUN_TYPES.SHOTGUN, GUN_TYPES.SNIPER_RIFLE, GUN_TYPES.RPG]
     },
     TORGUE: {
         name: 'Torgue',
@@ -176,7 +185,8 @@ export const manufacturers = {
             [r.EPIC]: 0,
             [r.LEGENDARY]: 0,
         },
-        gunInfo: 'Less Accuracy. Splash.'
+        gunInfo: 'Less Accuracy. Splash.',
+        builds: [GUN_TYPES.COMBAT_RIFLE, GUN_TYPES.PISTOL, GUN_TYPES.SMG, GUN_TYPES.SHOTGUN, GUN_TYPES.SNIPER_RIFLE, GUN_TYPES.RPG]
     },
     CHOICE: {
         name: 'any manufacturer', elemental: elementalRules.NORMAL, stats: {}, gunInfo: 'Choose a favourite manufacturer.', elementalBonuses: {

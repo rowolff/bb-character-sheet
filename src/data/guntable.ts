@@ -1,5 +1,6 @@
 import { manufacturers as m } from './manufacturers';
 import { rarities } from './rarities';
+import { GUN_TYPES } from './gunTypesEnum';
 
 export interface GunStatsConfig {
     LOW?: { name?: string, Hits: number, Crits: number };
@@ -76,7 +77,7 @@ export function getGunStatsByLevel(gunTypeKey: keyof typeof gt, level: number): 
 
 export const gt = {
     PISTOL: {
-        name: 'Pistol', byLevel: [
+        name: GUN_TYPES.PISTOL, byLevel: [
             {
                 range: [1, 6],
                 stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 3, Crits: 0 }, Damage: '2d4' })
@@ -100,7 +101,7 @@ export const gt = {
         Range: '5'
     },
     SMG: {
-        name: 'Submachine Gun', byLevel: [
+        name: GUN_TYPES.SMG, byLevel: [
             {
                 range: [1, 6],
                 stats: new GunStats({ LOW: { Hits: 2, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 0 }, HIGH: { Hits: 5, Crits: 0 }, Damage: '1d4' })
@@ -124,7 +125,7 @@ export const gt = {
         Range: '5'
     },
     SHOTGUN: {
-        name: 'Shotgun', byLevel: [
+        name: GUN_TYPES.SHOTGUN, byLevel: [
             {
                 range: [1, 6],
                 stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 2, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d8' })
@@ -149,7 +150,7 @@ export const gt = {
         Bonus: 'If Range 2 or Less: +2 Damage'
     },
     COMBAT_RIFLE: {
-        name: 'Combat Rifle', byLevel: [
+        name: GUN_TYPES.COMBAT_RIFLE, byLevel: [
             {
                 range: [1, 6],
                 stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 3, Crits: 0 }, HIGH: { Hits: 3, Crits: 1 }, Damage: '1d6' })
@@ -173,7 +174,7 @@ export const gt = {
         Range: '6'
     },
     SNIPER_RIFLE: {
-        name: 'Sniper Rifle', byLevel: [
+        name: GUN_TYPES.SNIPER_RIFLE, byLevel: [
             {
                 range: [1, 6],
                 stats: new GunStats({ LOW: { Hits: 0, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d10' })
@@ -198,7 +199,7 @@ export const gt = {
         Bonus: 'If Range 3+: +3 Accuracy'
     },
     RPG: {
-        name: 'Rocket Launcher', byLevel: [
+        name: GUN_TYPES.RPG, byLevel: [
             {
                 range: [1, 6],
                 stats: new GunStats({ LOW: { Hits: 1, Crits: 0 }, MEDIUM: { Hits: 1, Crits: 0 }, HIGH: { Hits: 1, Crits: 1 }, Damage: '1d12' })
@@ -222,7 +223,7 @@ export const gt = {
         Range: '4',
         Bonus: 'Splash'
     },
-    CHOICE: { name: 'Weapon of your choosing' },
+    CHOICE: { name: GUN_TYPES.CHOICE },
 } as const;
 export type GunType = (typeof gt)[keyof typeof gt];
 
