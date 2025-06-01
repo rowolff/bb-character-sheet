@@ -1,5 +1,5 @@
 // filepath: /Users/robertwolff/Projects/bb-character-sheet/src/components/CreateGun.tsx
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import { gunTable, GunType, gunRarities, getGunStatsByLevel, gt, prefixes, redText } from '../data/guntable'
 import { elementalRules, Manufacturer, manufacturers } from '../data/manufacturers'
 import { Rarity, rarities } from '../data/rarities'
@@ -150,7 +150,7 @@ export const CreateGun: React.FC = () => {
     const [selectedManufacturer, setSelectedManufacturer] = useState<string>("random")
 
     // Function to get available gun types for the selected manufacturer
-    const getAvailableGunTypes = () => {
+    const getAvailableGunTypes = useCallback(() => {
         if (selectedManufacturer === "random") {
             // All gun types are available when manufacturer is random
             return Object.keys(gt);
@@ -170,7 +170,7 @@ export const CreateGun: React.FC = () => {
             // Fallback to all gun types if no builds property
             return Object.keys(gt);
         }
-    };
+    }, [selectedManufacturer]);
 
     // Define sound configuration structure with all sounds in one state object
     type SoundState = {
@@ -445,7 +445,7 @@ export const CreateGun: React.FC = () => {
                 setSelectedGunType("random");
             }
         }
-    }, [selectedManufacturer]);
+    }, [selectedManufacturer, getAvailableGunTypes, selectedGunType]);
 
     const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedLevel(Number(e.target.value))
