@@ -84,9 +84,16 @@ const GunDisplay = styled.div<{ rarity?: string; isLegendary?: boolean; isEpic?:
 
 const Controls = styled.div`
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 15px;
   align-items: center;
+`
+
+const SelectContainer = styled.div`
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
 `
 
 const Select = styled.select`
@@ -132,6 +139,8 @@ interface RandomGun {
 export const CreateGun: React.FC = () => {
     const [selectedGun, setSelectedGun] = useState<RandomGun | null>(null)
     const [selectedLevel, setSelectedLevel] = useState<number>(1)
+    const [selectedGunType, setSelectedGunType] = useState<string>("random")
+    const [selectedRarity, setSelectedRarity] = useState<string>("random")
 
     // Define sound configuration structure with all sounds in one state object
     type SoundState = {
@@ -160,13 +169,56 @@ export const CreateGun: React.FC = () => {
     const levels = Array.from({ length: 30 }, (_, i) => i + 1)
 
     const generateRandomGun = () => {
-        // Select random gun
-        const randomRow = gunTable[Math.floor(Math.random() * gunTable.length)]
-        const randomGun = randomRow[Math.floor(Math.random() * randomRow.length)]
+        // Select gun based on dropdown or random
+        let randomGun: { type: GunType; manufacturer: Manufacturer };
+        
+        if (selectedGunType === "random") {
+            // Select a completely random gun
+            const randomRow = gunTable[Math.floor(Math.random() * gunTable.length)]
+            randomGun = randomRow[Math.floor(Math.random() * randomRow.length)]
+        } else {
+            // Find guns of the selected type
+            const gunTypeKey = selectedGunType as keyof typeof gt;
+            const gunType = gt[gunTypeKey];
+            
+            // Find all guns of this type in the gun table
+            const matchingGuns: { type: GunType; manufacturer: Manufacturer }[] = [];
+            
+            gunTable.forEach(row => {
+                row.forEach(gun => {
+                    if (gun.type.name === gunType.name) {
+                        matchingGuns.push(gun);
+                    }
+                });
+            });
+            
+            // Select a random gun from the matching ones, or use choice if available
+            if (matchingGuns.length > 0) {
+                randomGun = matchingGuns[Math.floor(Math.random() * matchingGuns.length)];
+            } else {
+                // Fallback to a gun with choice manufacturer if no matching guns found
+                randomGun = { 
+                    type: gunType, 
+                    manufacturer: manufacturers.CHOICE 
+                };
+            }
+        }
 
-        // Select random rarity
-        const randomRarityRow = gunRarities[Math.floor(Math.random() * gunRarities.length)]
-        const randomRarityInfo = randomRarityRow[Math.floor(Math.random() * randomRarityRow.length)]
+        // Select rarity based on dropdown or random
+        let randomRarityInfo: { rarity: Rarity; elemental: boolean };
+        
+        if (selectedRarity === "random") {
+            // Select a completely random rarity
+            const randomRarityRow = gunRarities[Math.floor(Math.random() * gunRarities.length)]
+            randomRarityInfo = randomRarityRow[Math.floor(Math.random() * randomRarityRow.length)]
+        } else {
+            // Use the selected rarity with 50% chance of elemental
+            const rarityValue = selectedRarity as keyof typeof rarities;
+            randomRarityInfo = {
+                rarity: rarities[rarityValue],
+                elemental: Math.random() < 0.5 // 50% chance of elemental
+            };
+        }
 
         let elementalOutcome: { damageTypes: DamageType[], addedDamage: string } = { damageTypes: [damageTypes.KINETIC], addedDamage: "0" }
 
@@ -299,6 +351,14 @@ export const CreateGun: React.FC = () => {
     const handleLevelChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedLevel(Number(e.target.value))
     }
+    
+    const handleGunTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedGunType(e.target.value)
+    }
+    
+    const handleRarityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setSelectedRarity(e.target.value)
+    }
 
     return (
         <Container>
@@ -306,7 +366,7 @@ export const CreateGun: React.FC = () => {
             <AudioPlayer sounds={sounds} />
 
             <Controls>
-                <div>
+                <SelectContainer>
                     <Label htmlFor="level-select">Level:</Label>
                     <Select
                         id="level-select"
@@ -319,8 +379,41 @@ export const CreateGun: React.FC = () => {
                             </option>
                         ))}
                     </Select>
-                </div>
-                <Button onClick={generateRandomGun}>Generate Random Gun</Button>
+                </SelectContainer>
+                
+                <SelectContainer>
+                    <Label htmlFor="gun-type-select">Gun Type:</Label>
+                    <Select
+                        id="gun-type-select"
+                        value={selectedGunType}
+                        onChange={handleGunTypeChange}
+                    >
+                        <option value="random">Random</option>
+                        {Object.entries(gt).map(([key, value]) => (
+                            <option key={key} value={key}>
+                                {value.name}
+                            </option>
+                        ))}
+                    </Select>
+                </SelectContainer>
+                
+                <SelectContainer>
+                    <Label htmlFor="rarity-select">Rarity:</Label>
+                    <Select
+                        id="rarity-select"
+                        value={selectedRarity}
+                        onChange={handleRarityChange}
+                    >
+                        <option value="random">Random</option>
+                        {Object.entries(rarities).map(([key, value]) => (
+                            <option key={key} value={key}>
+                                {value}
+                            </option>
+                        ))}
+                    </Select>
+                </SelectContainer>
+                
+                <Button onClick={generateRandomGun}>Generate Gun</Button>
             </Controls>
 
             {selectedGun && (
