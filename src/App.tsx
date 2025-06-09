@@ -35,10 +35,9 @@ const Row = styled.div`
   margin-bottom: 20px;
 `
 
-const Column = styled.div`
-  flex: 1;
+const Column = styled.div<{ width?: string }>`
+  flex: ${props => props.width || 1};
   min-width: 0; // Prevents flex items from overflowing
-  width: 50%;
 `
 
 const initialStats = {
@@ -207,10 +206,10 @@ const App = () => {
         <h1>Loot & Guns</h1>
       </Group>
       <Row>
-        <Column>
+        <Column width="40%">
           <Loot />
         </Column>
-        <Column>
+        <Column width="60%">
           <CreateGun />
         </Column>
       </Row>
